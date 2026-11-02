@@ -1,0 +1,933 @@
+.proton-dashboard {
+  --rust: #c06834;
+  --rust-bright: #ed9255;
+  --ink: #1c0f0d;
+  --panel: #261311;
+  --panel-deep: #110a09;
+  --cream: #f4e7db;
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  min-height: 100svh;
+  overflow: hidden;
+  color: var(--cream);
+  background:
+    linear-gradient(rgba(192, 104, 52, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(192, 104, 52, 0.035) 1px, transparent 1px),
+    #1c0f0d;
+  background-size: 24px 24px;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+.proton-dashboard button {
+  font: inherit;
+}
+
+.proton-topbar {
+  display: grid;
+  height: 48px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--rust);
+  align-items: center;
+  grid-template-columns: 190px 1fr 150px;
+  gap: 14px;
+  background: #100908;
+}
+
+.proton-back,
+.sequence-button {
+  height: 30px;
+  border: 1px solid rgba(192, 104, 52, 0.65);
+  color: #dca77f;
+  background: #21110e;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.proton-back {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.proton-back span {
+  width: 10px;
+  height: 10px;
+  margin-left: 10px;
+  border-bottom: 2px solid var(--rust-bright);
+  border-left: 2px solid var(--rust-bright);
+  transform: rotate(45deg);
+}
+
+.proton-back:hover,
+.sequence-button:hover {
+  color: white;
+  background: #3a1c13;
+}
+
+.mission-phase {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.mission-phase span {
+  padding: 4px 12px;
+  border: 1px solid #573022;
+  color: #79584b;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+.mission-phase span.active {
+  border-color: var(--rust);
+  color: var(--rust-bright);
+  background: rgba(192, 104, 52, 0.1);
+}
+
+.proton-layout {
+  display: grid;
+  min-height: calc(100svh - 48px);
+  grid-template-columns: minmax(0, 4fr) minmax(230px, 1fr);
+}
+
+.proton-content {
+  min-width: 0;
+  padding: clamp(16px, 2vw, 28px);
+}
+
+.systems-view {
+  display: grid;
+  height: calc(100svh - 88px);
+  min-height: 610px;
+  grid-template-columns: minmax(280px, 0.72fr) minmax(420px, 1.28fr);
+  gap: clamp(14px, 1.7vw, 24px);
+}
+
+.systems-left {
+  display: grid;
+  min-height: 0;
+  grid-template-rows: minmax(180px, 0.65fr) minmax(330px, 1.35fr);
+  gap: 16px;
+}
+
+.orbit-projection,
+.systems-copy,
+.rocket-blueprint,
+.sim-terminal {
+  position: relative;
+  border: 1px solid var(--rust);
+  background:
+    radial-gradient(circle at 30% 20%, rgba(192, 104, 52, 0.08), transparent 40%),
+    rgba(25, 12, 11, 0.9);
+}
+
+.orbit-projection::before,
+.rocket-blueprint::before,
+.systems-copy::before,
+.sim-terminal::before {
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(192, 104, 52, 0.22);
+  content: '';
+  pointer-events: none;
+}
+
+.orbit-projection {
+  min-height: 180px;
+  overflow: hidden;
+}
+
+.projection-label,
+.blueprint-head,
+.blueprint-footer,
+.terminal-label {
+  display: flex;
+  height: 27px;
+  padding: 0 12px;
+  border-bottom: 1px solid #6f3822;
+  align-items: center;
+  justify-content: space-between;
+  color: #c78358;
+  background: #170c0a;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.orbit-projection svg {
+  width: 100%;
+  height: calc(100% - 27px);
+}
+
+.orbit-projection svg path {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.orbit-earth {
+  stroke: #6a3a2d;
+  stroke-width: 2;
+}
+
+.orbit-path {
+  stroke: #d4763e;
+  stroke-width: 1.5;
+}
+
+.orbit-path.faint {
+  opacity: 0.4;
+  stroke-dasharray: 5 7;
+}
+
+.orbit-craft path {
+  fill: #d98952;
+  stroke: #f0b07c;
+  stroke-width: 1;
+  filter: drop-shadow(0 0 5px #dc7039);
+}
+
+.projection-coord {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  color: #88543d;
+  font-size: 8px;
+  letter-spacing: 0.1em;
+}
+
+.hud-cut {
+  clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
+}
+
+.systems-copy {
+  display: flex;
+  padding: clamp(24px, 3vw, 38px);
+  flex-direction: column;
+}
+
+.section-kicker {
+  margin: 0 0 4px;
+  color: #895039;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.systems-copy h1 {
+  margin: 0;
+  color: #fff8f1;
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(20px, 2.2vw, 30px);
+  font-weight: 600;
+}
+
+.system-selectors {
+  display: flex;
+  margin: 22px 0;
+  gap: clamp(10px, 1.3vw, 18px);
+}
+
+.system-selectors button {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #6a3e31;
+  border-radius: 50%;
+  place-items: center;
+  color: #9b7768;
+  background: #170d0b;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  box-shadow: inset 0 0 0 4px #21110e;
+}
+
+.system-selectors button:hover,
+.system-selectors button.active {
+  border-color: #ffc18f;
+  color: #fff;
+  background: var(--rust);
+  box-shadow:
+    inset 0 0 0 4px #3b1c13,
+    0 0 16px rgba(237, 146, 85, 0.65);
+}
+
+.copy-rule {
+  height: 1px;
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, var(--rust), transparent);
+}
+
+.systems-copy h2 {
+  margin: 0 0 10px;
+  color: var(--rust-bright);
+  font-size: clamp(17px, 1.6vw, 22px);
+  font-weight: 700;
+}
+
+.systems-copy > p:not(.section-kicker) {
+  max-width: 44ch;
+  margin: 0;
+  color: #e6d9d0;
+  font-size: clamp(14px, 1.25vw, 18px);
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.copy-meta {
+  display: flex;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid #4c291e;
+  justify-content: space-between;
+  color: #765043;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.rocket-blueprint {
+  display: grid;
+  min-width: 0;
+  overflow: hidden;
+  grid-template-rows: 27px 1fr 27px;
+}
+
+.rocket-blueprint > svg {
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+}
+
+.blueprint-grid path {
+  fill: none;
+  opacity: 0.16;
+  stroke: #74412d;
+  stroke-width: 0.7;
+}
+
+.structural-rocket,
+.propulsion-rocket,
+.guidance-rocket,
+.payload-rocket {
+  fill: none;
+  stroke: #dc8753;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.hull-fill,
+.nose-section {
+  fill: url(#rocketMetal);
+  stroke: #e69860;
+}
+
+.panel-lines {
+  opacity: 0.5;
+  stroke-width: 1;
+}
+
+.rocket-outline {
+  fill: rgba(60, 29, 23, 0.5);
+  stroke-width: 2;
+}
+
+.tank {
+  fill: url(#tankGlow);
+  opacity: 0.88;
+  filter: drop-shadow(0 0 7px rgba(225, 126, 62, 0.45));
+}
+
+.tank-detail {
+  opacity: 0.6;
+  stroke-width: 1;
+}
+
+.prop-lines {
+  stroke: #ffd0a0;
+  stroke-width: 4;
+}
+
+.engine {
+  fill: #6e351f;
+}
+
+.booster {
+  fill: #7a3c24;
+}
+
+.callout {
+  stroke-dasharray: 6 6;
+}
+
+.inset-ring {
+  fill: rgba(30, 14, 12, 0.9);
+  stroke-width: 2;
+}
+
+.inset-ring.inner {
+  stroke-width: 1;
+}
+
+.circuitry {
+  opacity: 0.88;
+  stroke-width: 1.4;
+}
+
+.payload-base {
+  fill: #301815;
+}
+
+.fairing {
+  fill: url(#rocketMetal);
+}
+
+.fairing.left {
+  transform: translate(-35px, -18px) rotate(-8deg);
+  transform-origin: 246px 80px;
+}
+
+.fairing.right {
+  transform: translate(35px, -18px) rotate(8deg);
+  transform-origin: 274px 80px;
+}
+
+.satellite rect {
+  fill: #e18a50;
+}
+
+.payload-platform {
+  fill: #5c2b1c;
+}
+
+.blueprint-footer {
+  border-top: 1px solid #6f3822;
+  border-bottom: 0;
+}
+
+.handbook-sidebar {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  border-left: 1px solid #315d68;
+  flex-direction: column;
+  background:
+    linear-gradient(180deg, rgba(13, 51, 62, 0.96), rgba(7, 31, 40, 0.98)),
+    #0c303a;
+  box-shadow: -10px 0 24px rgba(0, 0, 0, 0.32);
+}
+
+.handbook-tabs {
+  display: grid;
+  height: 48px;
+  grid-template-columns: 1fr 1.35fr;
+}
+
+.handbook-tabs button {
+  border-right: 1px solid #416875;
+  border-bottom: 1px solid #416875;
+  color: #99b0b5;
+  background: #153944;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.handbook-tabs button.active {
+  color: #fff;
+  background: #0b2730;
+  box-shadow: inset 0 -2px #76e8f1;
+}
+
+.handbook-list {
+  display: flex;
+  padding: 18px 12px;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.handbook-list > p,
+.case-summary > p {
+  margin: 0 8px 10px;
+  color: #6d9aa4;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.17em;
+}
+
+.handbook-list button {
+  display: grid;
+  min-height: 45px;
+  padding: 8px;
+  border-left: 2px solid transparent;
+  align-items: center;
+  grid-template-columns: 25px 1fr;
+  color: #c4d8db;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.05;
+  text-align: left;
+}
+
+.handbook-list button span {
+  color: #52818c;
+  font-size: 9px;
+}
+
+.handbook-list button:hover,
+.handbook-list button.active {
+  border-left-color: #9df5ff;
+  color: #fff;
+  background: rgba(140, 237, 246, 0.12);
+}
+
+.case-summary {
+  padding: 22px 18px;
+}
+
+.case-summary h2 {
+  margin: 0 8px 25px;
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.case-summary dl {
+  margin: 0;
+}
+
+.case-summary dl div {
+  padding: 12px 8px;
+  border-top: 1px solid #315765;
+}
+
+.case-summary dt {
+  color: #6d9aa4;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.case-summary dd {
+  margin: 2px 0 0;
+  color: #d8e9eb;
+}
+
+.handbook-footer {
+  display: grid;
+  margin-top: auto;
+  padding: 12px;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.handbook-footer button {
+  height: 38px;
+  border: 1px solid #7dd4df;
+  border-radius: 999px;
+  color: #dffcff;
+  background: #153e47;
+  font-weight: 700;
+}
+
+.handbook-footer button:hover {
+  color: #092129;
+  background: #a9f4f7;
+}
+
+.glossary-popover {
+  position: absolute;
+  right: 12px;
+  bottom: 62px;
+  left: 12px;
+  padding: 20px;
+  border: 1px solid #8fe9f0;
+  color: #d9f1f2;
+  background: #0b252d;
+  box-shadow: 0 10px 30px #000;
+}
+
+.glossary-popover > button {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  color: #9cebf1;
+  font-size: 20px;
+}
+
+.glossary-popover h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.glossary-popover p {
+  margin: 7px 0;
+  font-size: 12px;
+}
+
+.launch-simulator {
+  display: grid;
+  height: calc(100svh - 88px);
+  min-height: 610px;
+  grid-template-columns: minmax(280px, 0.88fr) minmax(430px, 1.12fr);
+  gap: clamp(14px, 1.7vw, 24px);
+}
+
+.earth-profile {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #267885;
+  background:
+    linear-gradient(180deg, #03151e 0 13%, #512217 16%, #0b1834 30%, #04152a 78%, #131b18 79%);
+}
+
+.altitude-marker {
+  position: absolute;
+  z-index: 4;
+  top: 10%;
+  right: 14px;
+  left: 14px;
+  display: flex;
+  border-top: 1px dashed #b5f8ff;
+  justify-content: space-between;
+  color: #d7fbff;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
+.altitude-marker b {
+  padding: 4px 10px;
+  background: #061620;
+  font-size: 13px;
+  transform: translateY(-50%);
+}
+
+.sim-stars {
+  position: absolute;
+  inset: 0 0 25%;
+  opacity: 0.45;
+  background-image: radial-gradient(circle, #fff 0 1px, transparent 1.4px);
+  background-size: 39px 51px;
+}
+
+.earth-ground {
+  position: absolute;
+  right: -5%;
+  bottom: -9%;
+  left: -5%;
+  height: 31%;
+  border-radius: 50% 50% 0 0;
+  background: radial-gradient(ellipse at 50% 0%, #805733, #151510 35%, #070b0b 70%);
+}
+
+.launch-tower {
+  position: absolute;
+  z-index: 3;
+  bottom: 14%;
+  left: 29%;
+  width: 42px;
+  height: 150px;
+  border: 3px solid #655145;
+  background: repeating-linear-gradient(45deg, transparent 0 15px, #594138 16px 18px);
+}
+
+.launch-tower i {
+  display: block;
+  height: 2px;
+  margin-top: 35px;
+  background: #8f6c58;
+}
+
+.sim-rocket {
+  position: absolute;
+  z-index: 5;
+  bottom: 14%;
+  left: 52%;
+  width: 28px;
+  height: 128px;
+  transition: transform 2.2s cubic-bezier(0.3, 0, 0.6, 1);
+}
+
+.rocket-body {
+  position: absolute;
+  inset: 0 3px 22px;
+  border: 1px solid #e4c7ad;
+  border-radius: 50% 50% 8% 8%;
+  background: linear-gradient(90deg, #664637, #f1d2b5 50%, #5c3c30);
+}
+
+.rocket-flame {
+  position: absolute;
+  right: 7px;
+  bottom: 0;
+  left: 7px;
+  height: 34px;
+  background: linear-gradient(#fff, #ffab39 38%, #ee3b1f 70%, transparent);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  filter: drop-shadow(0 0 8px #ff6b2b);
+}
+
+.earth-profile.is-launched .sim-rocket {
+  transform: translateY(-58vh);
+}
+
+.exhaust-clouds {
+  position: absolute;
+  z-index: 4;
+  right: 4%;
+  bottom: 8%;
+  left: 7%;
+  height: 100px;
+}
+
+.exhaust-clouds i {
+  position: absolute;
+  bottom: 0;
+  width: 100px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 55% 35%, #fff8ef, #d2b39c 45%, rgba(86, 55, 43, 0.2) 72%);
+  filter: blur(2px);
+}
+
+.exhaust-clouds i:nth-child(2) { left: 18%; bottom: 18px; }
+.exhaust-clouds i:nth-child(3) { left: 37%; width: 120px; }
+.exhaust-clouds i:nth-child(4) { right: 12%; bottom: 14px; }
+.exhaust-clouds i:nth-child(5) { right: 0; }
+
+.altitude-scale {
+  position: absolute;
+  z-index: 5;
+  top: 16%;
+  right: 8px;
+  bottom: 22%;
+  display: flex;
+  border-right: 1px solid rgba(151, 234, 242, 0.3);
+  justify-content: space-between;
+  flex-direction: column;
+  color: #6fabb3;
+  font-size: 8px;
+}
+
+.sim-terminal {
+  padding: clamp(28px, 3vw, 48px);
+  border-color: #2c9aab;
+  background: rgba(3, 20, 25, 0.93);
+}
+
+.sim-terminal::before {
+  border-color: rgba(60, 205, 220, 0.22);
+}
+
+.terminal-label {
+  height: auto;
+  margin: calc(clamp(28px, 3vw, 48px) * -1) calc(clamp(28px, 3vw, 48px) * -1) 28px;
+  padding: 10px 16px;
+  border-color: #256470;
+  color: #7ee7f2;
+  background: #061a20;
+}
+
+.sim-terminal > p {
+  max-width: 53ch;
+  margin: 0 0 14px;
+  color: #e1f3f3;
+  font-size: clamp(14px, 1.35vw, 19px);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.sim-controls {
+  display: grid;
+  margin-top: clamp(24px, 5vh, 48px);
+  align-items: center;
+  grid-template-columns: 118px 100px 1fr;
+  gap: clamp(18px, 3vw, 38px);
+}
+
+.thrust-controller {
+  display: grid;
+  padding: 12px;
+  border: 1px solid #3eb9c7;
+  place-items: center;
+  gap: 8px;
+  background: #081e24;
+}
+
+.thrust-controller > span {
+  width: calc(100% + 24px);
+  margin-top: -12px;
+  padding: 5px;
+  color: #a1f5fb;
+  background: #123640;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-align: center;
+}
+
+.thrust-controller button {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #4fd7e2;
+  border-radius: 50%;
+  place-items: center;
+  color: #8eecf4;
+  background: #0e3039;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.thrust-controller b {
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.force-vector {
+  display: grid;
+  height: 300px;
+  place-items: center;
+  grid-template-rows: 1fr auto 1fr auto;
+  color: #55e6f0;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+
+.up-arrow,
+.down-arrow {
+  position: relative;
+  width: 7px;
+  height: 95px;
+  background: #58f1fa;
+  box-shadow: 0 0 10px #45dbe8;
+}
+
+.up-arrow::before,
+.down-arrow::after {
+  position: absolute;
+  left: 50%;
+  width: 28px;
+  height: 28px;
+  border-top: 7px solid #58f1fa;
+  border-left: 7px solid #58f1fa;
+  content: '';
+}
+
+.up-arrow::before {
+  top: 0;
+  transform: translate(-50%, -2px) rotate(45deg);
+}
+
+.down-arrow::after {
+  bottom: 0;
+  transform: translate(-50%, 2px) rotate(225deg);
+}
+
+.launch-trigger {
+  display: grid;
+  width: clamp(120px, 14vw, 180px);
+  aspect-ratio: 1;
+  border: 2px solid #36b0bd;
+  border-radius: 50%;
+  place-items: center;
+  color: #8be8ef;
+  background:
+    radial-gradient(circle, #0d3239 0 48%, #06181c 49% 58%, #1f5660 59% 61%, #071a20 62%);
+  box-shadow: 0 0 24px rgba(53, 203, 216, 0.2);
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(12px, 1.4vw, 18px);
+  letter-spacing: 0.09em;
+}
+
+.launch-trigger:hover {
+  color: #fff;
+  box-shadow: 0 0 30px rgba(72, 230, 241, 0.55);
+}
+
+.launch-result {
+  margin-top: 25px;
+  padding: 12px;
+  opacity: 0;
+  border-left: 3px solid #53e6ee;
+  color: #7feff5;
+  background: rgba(65, 210, 220, 0.08);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  transition: opacity 300ms ease;
+}
+
+.launch-result.visible {
+  opacity: 1;
+}
+
+@media (max-width: 980px) {
+  .proton-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .handbook-sidebar {
+    min-height: 420px;
+    border-top: 1px solid #315d68;
+    border-left: 0;
+  }
+
+  .systems-view,
+  .launch-simulator {
+    height: auto;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .proton-topbar {
+    height: auto;
+    padding-block: 8px;
+    grid-template-columns: 1fr auto;
+  }
+
+  .mission-phase {
+    display: none;
+  }
+
+  .proton-layout {
+    min-height: calc(100svh - 48px);
+  }
+
+  .systems-view,
+  .launch-simulator {
+    grid-template-columns: 1fr;
+  }
+
+  .systems-left {
+    grid-template-rows: 190px auto;
+  }
+
+  .rocket-blueprint {
+    min-height: 600px;
+  }
+
+  .earth-profile {
+    min-height: 600px;
+  }
+
+  .sim-terminal {
+    min-height: 620px;
+  }
+
+  .sim-controls {
+    grid-template-columns: 100px 70px 1fr;
+    gap: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sim-rocket {
+    transition: none;
+  }
+}
