@@ -931,3 +931,626 @@
     transition: none;
   }
 }
+
+
+/* ============================================================
+   ORBITAL ACADEMY / UNSTABLE ORBITS SIMULATION (PORTION 2)
+   ============================================================ */
+
+.mission-phase button {
+  padding: 4px 12px;
+  border: 1px solid #573022;
+  color: #79584b;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  background: transparent;
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+
+.mission-phase button:hover {
+  color: var(--rust-bright);
+  border-color: rgba(192, 104, 52, 0.7);
+  background: rgba(192, 104, 52, 0.08);
+}
+
+.mission-phase button.active {
+  border-color: var(--rust);
+  color: var(--rust-bright);
+  background: rgba(192, 104, 52, 0.16);
+  box-shadow: 0 0 10px rgba(237, 146, 85, 0.35);
+}
+
+.orbital-academy-viewport {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: calc(100svh - 88px);
+  overflow: hidden;
+  flex-direction: column;
+  background: radial-gradient(50% 50% at 50% 52%, rgb(43, 20, 13) 0%, rgb(28, 14, 11) 48%, rgb(21, 10, 8) 100%);
+  border: 1px solid var(--rust);
+  font-family: 'Rajdhani', sans-serif;
+}
+
+.orbital-academy-viewport::before {
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(192, 104, 52, 0.22);
+  content: '';
+  pointer-events: none;
+  z-index: 2;
+}
+
+.academy-stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.academy-stars span {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background-color: #c5eeff;
+  box-shadow: 0 0 6px #62d8f9;
+  animation: academy-star-twinkle 3s ease-in-out infinite alternate;
+}
+
+@keyframes academy-star-twinkle {
+  0% { opacity: 0.3; transform: scale(0.8); }
+  100% { opacity: 0.9; transform: scale(1.3); }
+}
+
+.academy-header {
+  position: absolute;
+  top: 60px;
+  left: 28px;
+  z-index: 10;
+  max-width: 65%;
+  pointer-events: none;
+}
+
+.academy-kicker {
+  margin: 0 0 4px;
+  color: #d27a43;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.academy-header h1 {
+  margin: 0;
+  color: #edf8ff;
+  font-family: 'Orbitron', 'IBM Plex Sans', sans-serif;
+  font-size: clamp(18px, 2vw, 28px);
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.academy-controls-bar {
+  position: relative;
+  z-index: 12;
+  display: flex;
+  width: 100%;
+  padding: 10px 18px;
+  border-bottom: 1px solid rgba(210, 122, 67, 0.35);
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: rgba(16, 8, 6, 0.78);
+  backdrop-filter: blur(10px);
+}
+
+.mode-toggle-group {
+  display: flex;
+  gap: 6px;
+}
+
+.academy-btn {
+  padding: 5px 12px;
+  border: 1px solid rgba(210, 122, 67, 0.5);
+  border-radius: 4px;
+  color: #d89b72;
+  background: rgba(30, 14, 10, 0.85);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+
+.academy-btn.active,
+.academy-btn:hover {
+  border-color: #ff9e59;
+  color: #fff;
+  background: var(--rust);
+  box-shadow: 0 0 12px rgba(237, 146, 85, 0.4);
+}
+
+.academy-velocity-slider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #e1d3c8;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.academy-velocity-slider input[type='range'] {
+  width: 130px;
+  height: 6px;
+  cursor: pointer;
+  accent-color: var(--rust-bright);
+}
+
+.velocity-tag {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.velocity-tag.stable {
+  color: #4ce678;
+  background: rgba(76, 230, 120, 0.15);
+  border: 1px solid rgba(76, 230, 120, 0.4);
+}
+
+.velocity-tag.danger {
+  color: #ff5252;
+  background: rgba(255, 82, 82, 0.15);
+  border: 1px solid rgba(255, 82, 82, 0.4);
+}
+
+.velocity-tag.warning {
+  color: #ffb142;
+  background: rgba(255, 177, 66, 0.15);
+  border: 1px solid rgba(255, 177, 66, 0.4);
+}
+
+.academy-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tool-btn {
+  padding: 5px 10px;
+  border: 1px solid #573022;
+  border-radius: 4px;
+  color: #b78a75;
+  background: #170c0a;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.tool-btn:hover {
+  color: #fff;
+  border-color: #8f543d;
+}
+
+.tool-btn.active {
+  border-color: #61e2f7;
+  color: #fff;
+  background: #0d3844;
+  box-shadow: 0 0 8px rgba(97, 226, 247, 0.35);
+}
+
+.tool-btn.reset-btn {
+  border-color: #7a3c24;
+}
+
+.orbital-simulation-stage {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 520px;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.orbital-system-container {
+  position: relative;
+  display: flex;
+  width: 440px;
+  height: 440px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  z-index: 5;
+}
+
+.orbit-pathway-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: width 350ms cubic-bezier(0.2, 0, 0, 1), height 350ms cubic-bezier(0.2, 0, 0, 1), border-color 300ms ease, box-shadow 300ms ease;
+}
+
+.orbit-pathway-ring.stable-ring {
+  border: 2px dotted rgb(101, 229, 255);
+  box-shadow: rgba(65, 211, 255, 0.22) 0px 0px 22px 2px;
+}
+
+.orbit-pathway-ring.unstable-ring {
+  border: 2px dashed rgb(244, 91, 79);
+  box-shadow: rgba(244, 91, 79, 0.35) 0px 0px 22px 2px;
+}
+
+.decay-trail-svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  height: 500px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.academy-earth-globe {
+  position: relative;
+  width: 176px;
+  height: 176px;
+  border: 1px solid rgb(106, 201, 232);
+  border-radius: 50%;
+  background: radial-gradient(50% 50% at 33% 25%, rgb(103, 184, 217) 0%, rgb(35, 108, 154) 38%, rgb(11, 53, 92) 65%, rgb(2, 10, 23) 85%);
+  box-shadow: rgba(66, 177, 227, 0.35) 0px 0px 34px 4px;
+  overflow: hidden;
+  z-index: 4;
+}
+
+.continent {
+  position: absolute;
+  background: linear-gradient(135deg, rgb(168, 188, 161) 0%, rgb(96, 140, 128) 55%, rgb(50, 98, 117) 100%);
+  pointer-events: none;
+}
+
+.continent-1 {
+  top: 28px;
+  left: 26px;
+  width: 48px;
+  height: 35px;
+  border-radius: 22px 9px 18px 7px;
+  transform: rotate(-20deg);
+}
+
+.continent-2 {
+  top: 48px;
+  left: 58px;
+  width: 24px;
+  height: 44px;
+  border-radius: 8px 14px 18px 6px;
+  transform: rotate(22deg);
+}
+
+.continent-3 {
+  top: 88px;
+  left: 69px;
+  width: 22px;
+  height: 47px;
+  border-radius: 5px 14px 18px 12px;
+  transform: rotate(-20deg);
+}
+
+.continent-4 {
+  top: 26px;
+  left: 93px;
+  width: 54px;
+  height: 28px;
+  border-radius: 12px 18px 7px 14px;
+  transform: rotate(12deg);
+}
+
+.continent-5 {
+  top: 51px;
+  left: 114px;
+  width: 45px;
+  height: 32px;
+  border-radius: 8px 16px 20px 6px;
+  transform: rotate(-25deg);
+}
+
+.continent-6 {
+  top: 112px;
+  left: 122px;
+  width: 27px;
+  height: 18px;
+  border-radius: 12px 9px 7px 10px;
+  transform: rotate(18deg);
+}
+
+.continent-7 {
+  top: 16px;
+  left: 13px;
+  width: 65px;
+  height: 12px;
+  border-radius: 50%;
+  transform: rotate(-8deg);
+}
+
+.cloud-band {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(3px);
+  pointer-events: none;
+}
+
+.cloud-band-north {
+  top: 42px;
+  left: 14px;
+  width: 104px;
+  height: 12px;
+  background-color: rgba(235, 251, 255, 0.36);
+  transform: rotate(-22deg);
+}
+
+.cloud-band-south {
+  top: 91px;
+  left: 40px;
+  width: 102px;
+  height: 9px;
+  background-color: rgba(235, 251, 255, 0.24);
+  transform: rotate(-25deg);
+}
+
+.atmosphere-shadow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgba(197, 238, 255, 0.3) 0%, rgba(8, 22, 38, 0) 38%, rgba(0, 6, 16, 0.85) 83%, rgb(1, 7, 16) 100%);
+  pointer-events: none;
+}
+
+.satellite-rotation-axis {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.satellite-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  width: 114px;
+  height: 46px;
+  margin-top: -23px;
+  margin-left: -57px;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: transform 350ms cubic-bezier(0.2, 0, 0, 1);
+  pointer-events: auto;
+}
+
+.solar-array {
+  display: flex;
+  width: 36px;
+  height: 28px;
+  border: 2px solid rgb(141, 169, 183);
+  border-radius: 2px;
+  align-items: center;
+  justify-content: space-evenly;
+  background: linear-gradient(135deg, rgb(72, 121, 152) 0%, rgb(17, 47, 81) 50%, rgb(64, 119, 153) 100%);
+  box-shadow: 0 0 10px rgba(72, 121, 152, 0.4);
+}
+
+.cell-divider {
+  width: 1px;
+  height: 100%;
+  background-color: rgb(143, 180, 202);
+  opacity: 0.55;
+}
+
+.satellite-bus {
+  position: relative;
+  display: grid;
+  width: 27px;
+  height: 36px;
+  border: 1px solid rgb(201, 231, 241);
+  border-radius: 3px;
+  place-items: center;
+  background: linear-gradient(135deg, rgb(222, 166, 88) 0%, rgb(140, 95, 42) 50%, rgb(203, 153, 83) 100%);
+  box-shadow: 0 0 12px rgba(222, 166, 88, 0.45);
+}
+
+.bus-dish {
+  width: 10px;
+  height: 10px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: #1a0f0d;
+}
+
+.bus-antenna {
+  position: absolute;
+  top: -6px;
+  width: 2px;
+  height: 6px;
+  background: #c9e7f1;
+}
+
+.vector-overlays {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.velocity-vector-arrow {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  height: 3px;
+  margin-left: 6px;
+  background: #4ce678;
+  transform: translateY(-50%);
+  box-shadow: 0 0 8px #4ce678;
+  transition: width 200ms ease;
+}
+
+.velocity-vector-arrow::after {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid #4ce678;
+  content: '';
+}
+
+.velocity-vector-arrow span {
+  position: absolute;
+  top: -16px;
+  left: 0;
+  color: #79f59b;
+  font-size: 9px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.gravity-vector-arrow {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 3px;
+  height: 40px;
+  margin-top: 6px;
+  background: #38cde9;
+  transform: translateX(-50%);
+  box-shadow: 0 0 8px #38cde9;
+}
+
+.gravity-vector-arrow::after {
+  position: absolute;
+  bottom: -6px;
+  left: -4px;
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  border-top: 8px solid #38cde9;
+  content: '';
+}
+
+.gravity-vector-arrow span {
+  position: absolute;
+  top: 8px;
+  left: 6px;
+  color: #73e6fc;
+  font-size: 9px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.academy-info-card {
+  position: absolute;
+  top: 24px;
+  left: 28px;
+  z-index: 10;
+  width: min(340px, 90%);
+  padding: 18px 20px;
+  border: 1px solid rgb(203, 113, 58);
+  border-radius: 8px;
+  background-color: rgba(38, 19, 12, 0.95);
+  box-shadow: rgba(215, 112, 54, 0.2) 0px 0px 20px 0px;
+  backdrop-filter: blur(10px);
+}
+
+.academy-info-card h2 {
+  margin: 0 0 8px;
+  color: #e99a64;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.academy-info-card p {
+  margin: 0;
+  color: #e6d6cd;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.academy-info-card strong {
+  color: #ffc49c;
+}
+
+.academy-science-tip-hud {
+  position: absolute;
+  bottom: 24px;
+  left: 28px;
+  z-index: 10;
+  width: min(580px, 92%);
+  padding: 14px 20px;
+  border-left: 3px solid rgb(163, 82, 44);
+  border-radius: 6px;
+  background-color: rgba(30, 14, 10, 0.95);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(16px);
+}
+
+.academy-science-tip-hud h3 {
+  margin: 0 0 4px;
+  color: #e58a4e;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.academy-science-tip-hud p {
+  margin: 0;
+  color: #e6d6cd;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .academy-header {
+    top: 55px;
+    left: 16px;
+  }
+
+  .academy-info-card {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 92%;
+    margin: 16px auto 0;
+  }
+
+  .academy-science-tip-hud {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    width: 92%;
+    margin: 16px auto;
+  }
+
+  .orbital-simulation-stage {
+    flex-direction: column;
+    min-height: 480px;
+  }
+}

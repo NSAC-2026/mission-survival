@@ -1,10 +1,12 @@
 'use client'
 
 import { useState } from 'react'
+import OrbitalAcademySimulation from './OrbitalAcademySimulation'
 
-type ViewState = 1 | 2 | 3 | 4 | 5
+type SystemView = 1 | 2 | 3 | 4
+type ViewState = SystemView | 5 | 'orbital-alpha' | 'orbital-beta'
 
-const systemContent = {
+const systemContent: Record<SystemView, { title: string; body: string }> = {
   1: {
     title: 'Structural system',
     body: 'A rocket is made of four major systems. The structural system is the frame and shell of a rocket. It holds all of the other systems.',
@@ -21,7 +23,7 @@ const systemContent = {
     title: 'Payload',
     body: 'The payload is any cargo, object, or person the rocket needs to deliver or transport into space. It is the primary reason a rocket is sent to space. The payload will be released into space.',
   },
-} as const
+}
 
 const handbookItems = [
   'Parts of a Rocket',
@@ -51,7 +53,7 @@ function OrbitProjection() {
   )
 }
 
-function RocketBlueprint({ view }: { view: Exclude<ViewState, 5> }) {
+function RocketBlueprint({ view }: { view: SystemView }) {
   return (
     <div className={`rocket-blueprint blueprint-state-${view}`}>
       <div className="blueprint-head">
@@ -145,8 +147,8 @@ function SystemsView({
   view,
   onView,
 }: {
-  view: Exclude<ViewState, 5>
-  onView: (view: Exclude<ViewState, 5>) => void
+  view: SystemView
+  onView: (view: SystemView) => void
 }) {
   const content = systemContent[view]
   return (
@@ -252,28 +254,80 @@ export default function ProtonDashboard({ onBack }: { onBack: () => void }) {
     if (index === 1) setView(1)
     if (index === 2) setView(3)
     if (index === 3) setView(4)
-    if (index === 6) setView(5)
+    if (index === 4) setView('orbital-alpha')
+    if (index === 5) setView('orbital-beta')
+    if (index === 6) setView('orbital-beta')
   }
 
   return (
     <section className="proton-dashboard" aria-label="Proton Launch educational dashboard">
       <header className="proton-topbar">
-        <button className="proton-back" type="button" onClick={onBack}><span /> Back to missions</button>
+        <button className="proton-back" type="button" onClick={onBack}>
+          <span /> Back to missions
+        </button>
         <div className="mission-phase">
-          <span className={view < 5 ? 'active' : ''}>SYSTEMS</span>
-          <span>ORBITAL ALPHA</span>
-          <span>ORBITAL BETA</span>
-          <span className={view === 5 ? 'active' : ''}>LAUNCH SEQUENCE</span>
+          <button
+            type="button"
+            className={typeof view === 'number' && view <= 4 ? 'active' : ''}
+            onClick={() => setView(1)}
+          >
+            SYSTEMS
+          </button>
+          <button
+            type="button"
+            className={view === 'orbital-alpha' ? 'active' : ''}
+            onClick={() => setView('orbital-alpha')}
+          >
+            ORBITAL ALPHA
+          </button>
+          <button
+            type="button"
+            className={view === 'orbital-beta' ? 'active' : ''}
+            onClick={() => setView('orbital-beta')}
+          >
+            ORBITAL BETA
+          </button>
+          <button
+            type="button"
+            className={view === 5 ? 'active' : ''}
+            onClick={() => setView(5)}
+          >
+            LAUNCH SEQUENCE
+          </button>
         </div>
-        <button className="sequence-button" type="button" onClick={() => setView(5)}>Open simulator</button>
+        <button
+          className="sequence-button"
+          type="button"
+          onClick={() => {
+            if (view === 5) {
+              setView(1)
+            } else if (view === 'orbital-alpha' || view === 'orbital-beta') {
+              setView(5)
+            } else {
+              setView('orbital-alpha')
+            }
+          }}
+        >
+          {view === 5 ? 'Rocket Systems' : view === 'orbital-alpha' || view === 'orbital-beta' ? 'Launch Simulator' : 'Orbit Simulation'}
+        </button>
       </header>
 
       <div className="proton-layout">
         <main className="proton-content">
           {view === 5 ? (
             <LaunchSimulator />
+          ) : view === 'orbital-alpha' ? (
+            <OrbitalAcademySimulation
+              initialMode="stable"
+              onSelectLesson={(lesson) => setView(lesson === 'stable' ? 'orbital-alpha' : 'orbital-beta')}
+            />
+          ) : view === 'orbital-beta' ? (
+            <OrbitalAcademySimulation
+              initialMode="unstable"
+              onSelectLesson={(lesson) => setView(lesson === 'stable' ? 'orbital-alpha' : 'orbital-beta')}
+            />
           ) : (
-            <SystemsView view={view} onView={setView} />
+            <SystemsView view={view} onView={(v) => setView(v)} />
           )}
         </main>
 
@@ -286,26 +340,61 @@ export default function ProtonDashboard({ onBack }: { onBack: () => void }) {
           {activeTab === 'handbook' ? (
             <nav className="handbook-list" aria-label="Handbook lessons">
               <p>NAVIGATION HANDBOOK</p>
-              {handbookItems.map((item, index) => (
-                <button
-                  className={(index === 0 && view < 5) || (index === 6 && view === 5) ? 'active' : ''}
-                  type="button"
-                  key={item}
-                  onClick={() => selectHandbookItem(index)}
-                >
-                  <span>0{index + 1}</span>
-                  {item}
-                </button>
-              ))}
+              {handbookItems.map((item, index) => {
+                const isActive =
+                  (index === 0 && view === 2) ||
+                  (index === 1 && view === 1) ||
+                  (index === 2 && view === 3) ||
+                  (index === 3 && view === 4) ||
+                  (index === 4 && view === 'orbital-alpha') ||
+                  (index === 5 && view === 'orbital-beta') ||
+                  (index === 6 && (view === 'orbital-beta' || view === 5))
+                return (
+                  <button
+                    className={isActive ? 'active' : ''}
+                    type="button"
+                    key={item}
+                    onClick={() => selectHandbookItem(index)}
+                  >
+                    <span>0{index + 1}</span>
+                    {item}
+                  </button>
+                )
+              })}
             </nav>
           ) : (
             <div className="case-summary">
               <p>ACTIVE CASE</p>
-              <h2>PROTON-M</h2>
+              <h2>{view === 'orbital-alpha' || view === 'orbital-beta' ? 'ORBITAL ACADEMY' : 'PROTON-M'}</h2>
               <dl>
-                <div><dt>Objective</dt><dd>500 km orbit</dd></div>
-                <div><dt>Vehicle</dt><dd>Three-stage rocket</dd></div>
-                <div><dt>Status</dt><dd>Training ready</dd></div>
+                <div>
+                  <dt>Objective</dt>
+                  <dd>
+                    {view === 'orbital-alpha'
+                      ? 'Stable Circular Orbit (7.8 km/s)'
+                      : view === 'orbital-beta'
+                      ? 'Decay Analysis / Orbital Equilibrium'
+                      : '500 km orbit'}
+                  </dd>
+                </div>
+                <div>
+                  <dt>Vehicle</dt>
+                  <dd>
+                    {view === 'orbital-alpha' || view === 'orbital-beta'
+                      ? 'Earth Orbiter / Sensor Array'
+                      : 'Three-stage rocket'}
+                  </dd>
+                </div>
+                <div>
+                  <dt>Status</dt>
+                  <dd>
+                    {view === 'orbital-alpha'
+                      ? 'Stable Orbit Locked'
+                      : view === 'orbital-beta'
+                      ? 'Unstable Orbit Simulated'
+                      : 'Training ready'}
+                  </dd>
+                </div>
               </dl>
             </div>
           )}
@@ -321,7 +410,9 @@ export default function ProtonDashboard({ onBack }: { onBack: () => void }) {
               <h2>Flight Glossary</h2>
               <p><b>Thrust</b> — force that moves a rocket upward.</p>
               <p><b>Payload</b> — cargo carried by a spacecraft.</p>
-              <p><b>Orbit</b> — a curved path around a body in space.</p>
+              <p><b>Orbit</b> — a curved path around a body in space caused by continuous falling toward the planet while moving sideways.</p>
+              <p><b>Velocity</b> — speed in a specific direction required to counteract gravitational pull.</p>
+              <p><b>Unstable Orbit</b> — orbital decay caused when forward velocity drops below the gravitational threshold.</p>
             </div>
           )}
         </aside>
