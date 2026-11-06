@@ -3,6 +3,8 @@
 import { useState, type SVGProps } from 'react'
 import ProtonDashboard from './ProtonDashboard'
 import AstronautProfile from './AstronautProfile'
+import MissionSurvivalTerminal from './MissionSurvivalTerminal'
+import SpaceStationDocking from './SpaceStationDocking'
 
 type IconProps = SVGProps<SVGSVGElement>
 
@@ -34,7 +36,7 @@ const missions = [
 const launchMissions = [
   { name: 'Astronaut Launch', kind: 'astronaut' },
   { name: 'Proton Launch', kind: 'proton' },
-  { name: 'Space Station', kind: 'station' },
+  { name: 'Space Station Docking', kind: 'station' },
   { name: 'First Stage Landing', kind: 'landing' },
   { name: 'Moon Mission', kind: 'moon' },
   { name: 'Mars Mission', kind: 'mars' },
@@ -104,7 +106,10 @@ function Gauge({ label, value, color = 'green' }: { label: string; value: string
 export default function SpaceGameMenu() {
   const [status, setStatus] = useState('All systems ready')
   const [showMore, setShowMore] = useState(false)
-  const [screen, setScreen] = useState<'menu' | 'quick-play' | 'proton-dashboard' | 'astronaut-profile'>('menu')
+  const [screen, setScreen] = useState<
+    'menu' | 'quick-play' | 'proton-dashboard' | 'astronaut-profile' | 'survival-terminal' | 'docking-simulator'
+  >('menu')
+  const [terminalLevel, setTerminalLevel] = useState<4 | 5>(4)
 
   return (
     <main className="space-screen">
@@ -118,6 +123,13 @@ export default function SpaceGameMenu() {
         <AstronautProfile onBack={() => setScreen('quick-play')} />
       ) : screen === 'proton-dashboard' ? (
         <ProtonDashboard onBack={() => setScreen('quick-play')} />
+      ) : screen === 'docking-simulator' ? (
+        <SpaceStationDocking onBack={() => setScreen('quick-play')} />
+      ) : screen === 'survival-terminal' ? (
+        <MissionSurvivalTerminal
+          initialLevel={terminalLevel}
+          onBack={() => setScreen('quick-play')}
+        />
       ) : screen === 'menu' ? (
         <section className="menu-shell" aria-label="Mission Space main menu">
           <div className="top-signal" aria-hidden="true">
@@ -224,6 +236,17 @@ export default function SpaceGameMenu() {
                     onClick={() => {
                       if (mission.name === 'Astronaut Launch') setScreen('astronaut-profile')
                       if (mission.name === 'Proton Launch') setScreen('proton-dashboard')
+                      if (mission.name === 'Space Station Docking' || mission.name === 'Space Station') {
+                        setScreen('docking-simulator')
+                      }
+                      if (mission.name === 'Moon Mission') {
+                        setTerminalLevel(4)
+                        setScreen('survival-terminal')
+                      }
+                      if (mission.name === 'Mars Mission') {
+                        setTerminalLevel(5)
+                        setScreen('survival-terminal')
+                      }
                     }}
                   >
                     <span className="launch-tile">

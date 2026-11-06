@@ -12,16 +12,18 @@ export default function OrbitalAcademySimulation({
   onSelectLesson,
 }: OrbitalAcademySimulationProps) {
   const [mode, setMode] = useState<'stable' | 'unstable'>(initialMode)
+  const [prevPropMode, setPrevPropMode] = useState(initialMode)
   const [velocity, setVelocity] = useState(initialMode === 'unstable' ? 5.8 : 7.8)
   const [showVectors, setShowVectors] = useState(true)
   const [isPlaying, setIsPlaying] = useState(true)
   const [orbitAngle, setOrbitAngle] = useState(316)
 
-  // Sync mode if initialMode prop changes
-  useEffect(() => {
+  // Sync mode if initialMode prop changes (React pattern: adjust state during render)
+  if (prevPropMode !== initialMode) {
+    setPrevPropMode(initialMode)
     setMode(initialMode)
     setVelocity(initialMode === 'unstable' ? 5.8 : 7.8)
-  }, [initialMode])
+  }
 
   // Orbital physics simulation loop
   useEffect(() => {
@@ -42,7 +44,6 @@ export default function OrbitalAcademySimulation({
   // 7.8 km/s is perfectly stable at 220px radius (440px diameter)
   const isStable = Math.abs(velocity - 7.8) < 0.3
   const isDecaying = velocity < 7.5
-  const isEscaping = velocity > 8.1
   const currentRadius = isStable ? 220 : Math.max(110, Math.min(270, 110 + (velocity - 4.5) * 35))
 
   return (

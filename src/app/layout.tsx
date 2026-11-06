@@ -3,6 +3,8 @@ import { Orbitron, Rajdhani } from "next/font/google";
 import "./globals.css";
 import "@/styles/proton-dashboard.css";
 import "@/styles/astronaut-profile.css";
+import "@/styles/terminal.css";
+import "@/styles/docking-simulator.css";
 
 const orbitron = Orbitron({
   variable: "--font-orbitron",

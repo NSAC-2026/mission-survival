@@ -13,6 +13,9 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     "Sci-Fi Space Game Menu/**",
+    "mission-survival-terminal/**",
+    "Level 3_ Space Station Docking_files/**",
+    "Unstable Orbits Simulation — Orbital Academy_files/**",
   ]),
 ]);
 
