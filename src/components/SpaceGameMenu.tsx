@@ -2,11 +2,17 @@
 
 import { useState, type SVGProps } from 'react'
 import { useRouter } from 'next/navigation'
-import ProtonDashboard from './ProtonDashboard'
+import dynamic from 'next/dynamic'
 import AstronautProfile from './AstronautProfile'
 import MissionSurvivalTerminal from './MissionSurvivalTerminal'
 import SpaceStationDocking from './SpaceStationDocking'
 import { cockpitAudio } from '@/utils/audio'
+import { isLevelUnlocked, unlockLevel } from '@/lib/campaign-state'
+
+const ProtonDashboard = dynamic(() => import('./ProtonDashboard'), {
+  ssr: false,
+  loading: () => <div className="proton-dashboard" />,
+})
 
 type IconProps = SVGProps<SVGSVGElement>
 
@@ -108,6 +114,7 @@ export default function SpaceGameMenu() {
   const router = useRouter()
   const [status, setStatus] = useState('All systems ready')
   const [showMore, setShowMore] = useState(false)
+  const [lockedNotice, setLockedNotice] = useState<string | null>(null)
   const [screen, setScreen] = useState<
     'menu' | 'quick-play' | 'proton-dashboard' | 'astronaut-profile' | 'survival-terminal' | 'docking-simulator'
   >('menu')
@@ -124,17 +131,24 @@ export default function SpaceGameMenu() {
       {screen === 'astronaut-profile' ? (
         <AstronautProfile
           onBack={() => setScreen('quick-play')}
-          onNext={() => setScreen('proton-dashboard')}
+          onNext={() => {
+            unlockLevel(2)
+            setScreen('proton-dashboard')
+          }}
         />
       ) : screen === 'proton-dashboard' ? (
         <ProtonDashboard
           onBack={() => setScreen('quick-play')}
-          onNext={() => setScreen('docking-simulator')}
+          onNext={() => {
+            unlockLevel(3)
+            setScreen('docking-simulator')
+          }}
         />
       ) : screen === 'docking-simulator' ? (
         <SpaceStationDocking
           onBack={() => setScreen('quick-play')}
           onNext={() => {
+            unlockLevel(4)
             setTerminalLevel(4)
             setScreen('survival-terminal')
           }}
@@ -145,6 +159,7 @@ export default function SpaceGameMenu() {
           onBack={() => setScreen('quick-play')}
           onNext={() => {
             if (terminalLevel === 4) {
+              unlockLevel(5)
               setTerminalLevel(5)
             } else {
               setScreen('quick-play')
@@ -251,35 +266,63 @@ export default function SpaceGameMenu() {
 
           <div className="quick-layout">
             <div className="mission-panel">
+              {lockedNotice && (
+                <div className="launch-locked-banner" role="alert">
+                  <span>{lockedNotice}</span>
+                </div>
+              )}
               <div className="launch-grid">
-                {launchMissions.map((mission, index) => (
-                  <button
-                    className="launch-mission"
-                    type="button"
-                    key={mission.name}
-                    onMouseEnter={() => cockpitAudio.playHover()}
-                    onClick={() => {
-                      cockpitAudio.playClick()
-                      if (mission.name === 'Astronaut Launch') router.push('/level-1')
-                      if (mission.name === 'Proton Launch') router.push('/level-2')
-                      if (mission.name === 'Space Station Docking' || mission.name === 'Space Station') {
-                        router.push('/level-3')
-                      }
-                      if (mission.name === 'Moon Mission') {
-                        router.push('/level-4')
-                      }
-                      if (mission.name === 'Mars Mission') {
-                        router.push('/level-5')
-                      }
-                    }}
-                  >
-                    <span className="launch-tile">
-                      <MissionGlyph kind={mission.kind} />
-                      <b>{index + 1}.</b>
-                    </span>
-                    <span className="launch-name">{mission.name}</span>
-                  </button>
-                ))}
+                {launchMissions.map((mission, index) => {
+                  const levelNum = index + 1
+                  const isUnlocked = isLevelUnlocked(levelNum)
+                  return (
+                    <button
+                      className={`launch-mission ${!isUnlocked ? 'is-locked' : ''}`}
+                      type="button"
+                      key={mission.name}
+                      aria-disabled={!isUnlocked}
+                      title={!isUnlocked ? `Level ${levelNum} is locked. Complete Level ${levelNum - 1} first.` : ''}
+                      onMouseEnter={() => {
+                        if (isUnlocked) cockpitAudio.playHover()
+                      }}
+                      onClick={() => {
+                        cockpitAudio.playClick()
+                        if (!isUnlocked) {
+                          setLockedNotice(`🔒 Level ${levelNum} (${mission.name}) is locked! Complete Level ${levelNum - 1} first to unlock.`)
+                          setTimeout(() => setLockedNotice(null), 4000)
+                          return
+                        }
+                        if (mission.name === 'Astronaut Launch') router.push('/level-1')
+                        if (mission.name === 'Proton Launch') router.push('/level-2')
+                        if (mission.name === 'Space Station Docking' || mission.name === 'Space Station') {
+                          router.push('/level-3')
+                        }
+                        if (mission.name === 'Moon Mission') {
+                          router.push('/level-4')
+                        }
+                        if (mission.name === 'Mars Mission') {
+                          router.push('/level-5')
+                        }
+                      }}
+                    >
+                      <span className="launch-tile">
+                        <MissionGlyph kind={mission.kind} />
+                        <b>{index + 1}.</b>
+                        {!isUnlocked && (
+                          <span className="launch-lock-badge">
+                            🔒 LOCKED
+                          </span>
+                        )}
+                      </span>
+                      <span className="launch-name">{mission.name}</span>
+                      {!isUnlocked ? (
+                        <span className="launch-lock-req">Req: Level {levelNum - 1}</span>
+                      ) : (
+                        <span className="launch-unlocked-tag">UNLOCKED</span>
+                      )}
+                    </button>
+                  )
+                })}
               </div>
             </div>
 

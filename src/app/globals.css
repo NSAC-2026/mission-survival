@@ -691,12 +691,92 @@ footer {
 
 .launch-name {
   display: block;
-  min-height: 3rem;
+  min-height: 2.2rem;
   margin-top: 0;
   font-size: clamp(0.63rem, 1.8vw, 1.05rem);
   font-weight: 500;
   line-height: 1.22;
   text-shadow: 0 2px 2px #000;
+}
+
+/* Locked Launch Mission Styles */
+.launch-mission.is-locked {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.launch-mission.is-locked .launch-tile {
+  border: 2px dashed #4b6b7a;
+  background:
+    radial-gradient(circle at 50% 34%, rgba(20, 35, 45, 0.4), transparent 47%),
+    linear-gradient(180deg, rgba(12, 28, 38, 0.7), rgba(5, 15, 25, 0.95));
+  box-shadow: none;
+}
+
+.launch-mission.is-locked .launch-tile svg {
+  filter: grayscale(1) opacity(0.35);
+}
+
+.launch-mission.is-locked:hover .launch-tile {
+  border-color: #f87171;
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.4);
+  transform: none;
+}
+
+.launch-mission.is-locked:hover .launch-name {
+  color: #fca5a5;
+  text-shadow: none;
+}
+
+.launch-lock-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 3px 7px;
+  border-radius: 4px;
+  background: rgba(185, 28, 28, 0.9);
+  border: 1px solid #f87171;
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.65);
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.launch-lock-req {
+  display: inline-block;
+  font-size: 10px;
+  color: #94a3b8;
+  letter-spacing: 0.04em;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.launch-unlocked-tag {
+  display: inline-block;
+  font-size: 9px;
+  color: #34d399;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.launch-locked-banner {
+  margin-bottom: 14px;
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: 1.5px solid #ef4444;
+  background: rgba(127, 29, 29, 0.6);
+  color: #fee2e2;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 0 14px rgba(239, 68, 68, 0.4);
 }
 
 .telemetry-panel {

@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import SpaceStationDocking from '@/components/SpaceStationDocking'
+import { unlockLevel } from '@/lib/campaign-state'
 
 export default function Level3Page() {
   const router = useRouter()
@@ -9,7 +10,10 @@ export default function Level3Page() {
   return (
     <SpaceStationDocking
       onBack={() => router.push('/')}
-      onNext={() => router.push('/level-4')}
+      onNext={() => {
+        unlockLevel(4)
+        router.push('/level-4')
+      }}
     />
   )
 }
