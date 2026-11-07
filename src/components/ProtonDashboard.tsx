@@ -243,7 +243,13 @@ function LaunchSimulator() {
   )
 }
 
-export default function ProtonDashboard({ onBack }: { onBack: () => void }) {
+export default function ProtonDashboard({
+  onBack,
+  onNext,
+}: {
+  onBack: () => void
+  onNext?: () => void
+}) {
   const [view, setView] = useState<ViewState>(2)
   const [activeTab, setActiveTab] = useState<'case' | 'handbook'>('handbook')
   const [muted, setMuted] = useState(true)
@@ -396,6 +402,23 @@ export default function ProtonDashboard({ onBack }: { onBack: () => void }) {
                   </dd>
                 </div>
               </dl>
+            </div>
+          )}
+
+          {onNext && (
+            <div className="campaign-advance-banner" style={{ margin: '14px 0 0', padding: '12px' }}>
+              <div className="campaign-advance-info">
+                <h3 style={{ fontSize: '13px' }}>🚀 ORBIT ACHIEVED</h3>
+                <p style={{ fontSize: '11px' }}>Proton-M launch systems and orbit mechanics verified.</p>
+              </div>
+              <button
+                type="button"
+                className="campaign-advance-btn"
+                style={{ padding: '8px 14px', fontSize: '11px' }}
+                onClick={() => onNext()}
+              >
+                LEVEL 3: DOCKING ▶
+              </button>
             </div>
           )}
 

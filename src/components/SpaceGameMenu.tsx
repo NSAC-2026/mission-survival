@@ -1,10 +1,12 @@
 'use client'
 
 import { useState, type SVGProps } from 'react'
+import { useRouter } from 'next/navigation'
 import ProtonDashboard from './ProtonDashboard'
 import AstronautProfile from './AstronautProfile'
 import MissionSurvivalTerminal from './MissionSurvivalTerminal'
 import SpaceStationDocking from './SpaceStationDocking'
+import { cockpitAudio } from '@/utils/audio'
 
 type IconProps = SVGProps<SVGSVGElement>
 
@@ -37,7 +39,6 @@ const launchMissions = [
   { name: 'Astronaut Launch', kind: 'astronaut' },
   { name: 'Proton Launch', kind: 'proton' },
   { name: 'Space Station Docking', kind: 'station' },
-  { name: 'First Stage Landing', kind: 'landing' },
   { name: 'Moon Mission', kind: 'moon' },
   { name: 'Mars Mission', kind: 'mars' },
 ]
@@ -104,6 +105,7 @@ function Gauge({ label, value, color = 'green' }: { label: string; value: string
 }
 
 export default function SpaceGameMenu() {
+  const router = useRouter()
   const [status, setStatus] = useState('All systems ready')
   const [showMore, setShowMore] = useState(false)
   const [screen, setScreen] = useState<
@@ -120,15 +122,34 @@ export default function SpaceGameMenu() {
       <div className="star-layer stars-far" aria-hidden="true" />
 
       {screen === 'astronaut-profile' ? (
-        <AstronautProfile onBack={() => setScreen('quick-play')} />
+        <AstronautProfile
+          onBack={() => setScreen('quick-play')}
+          onNext={() => setScreen('proton-dashboard')}
+        />
       ) : screen === 'proton-dashboard' ? (
-        <ProtonDashboard onBack={() => setScreen('quick-play')} />
+        <ProtonDashboard
+          onBack={() => setScreen('quick-play')}
+          onNext={() => setScreen('docking-simulator')}
+        />
       ) : screen === 'docking-simulator' ? (
-        <SpaceStationDocking onBack={() => setScreen('quick-play')} />
+        <SpaceStationDocking
+          onBack={() => setScreen('quick-play')}
+          onNext={() => {
+            setTerminalLevel(4)
+            setScreen('survival-terminal')
+          }}
+        />
       ) : screen === 'survival-terminal' ? (
         <MissionSurvivalTerminal
           initialLevel={terminalLevel}
           onBack={() => setScreen('quick-play')}
+          onNext={() => {
+            if (terminalLevel === 4) {
+              setTerminalLevel(5)
+            } else {
+              setScreen('quick-play')
+            }
+          }}
         />
       ) : screen === 'menu' ? (
         <section className="menu-shell" aria-label="Mission Space main menu">
@@ -160,8 +181,11 @@ export default function SpaceGameMenu() {
                 className="mission-card"
                 key={label}
                 type="button"
+                onMouseEnter={() => cockpitAudio.playHover()}
                 onClick={() => {
+                  cockpitAudio.playClick()
                   setStatus(detail)
+                  if (label === 'Tutorials') router.push('/level-1')
                   if (label === 'Space Station') setScreen('quick-play')
                 }}
               >
@@ -233,19 +257,19 @@ export default function SpaceGameMenu() {
                     className="launch-mission"
                     type="button"
                     key={mission.name}
+                    onMouseEnter={() => cockpitAudio.playHover()}
                     onClick={() => {
-                      if (mission.name === 'Astronaut Launch') setScreen('astronaut-profile')
-                      if (mission.name === 'Proton Launch') setScreen('proton-dashboard')
+                      cockpitAudio.playClick()
+                      if (mission.name === 'Astronaut Launch') router.push('/level-1')
+                      if (mission.name === 'Proton Launch') router.push('/level-2')
                       if (mission.name === 'Space Station Docking' || mission.name === 'Space Station') {
-                        setScreen('docking-simulator')
+                        router.push('/level-3')
                       }
                       if (mission.name === 'Moon Mission') {
-                        setTerminalLevel(4)
-                        setScreen('survival-terminal')
+                        router.push('/level-4')
                       }
                       if (mission.name === 'Mars Mission') {
-                        setTerminalLevel(5)
-                        setScreen('survival-terminal')
+                        router.push('/level-5')
                       }
                     }}
                   >

@@ -1,774 +1,497 @@
-/* ==========================================================================
-   LEVEL 3: SPACE STATION DOCKING SIMULATOR
-   Neon Telemetry Docking Simulator for Space Station Crew Operations
-   ========================================================================== */
+/* ============================================================
+   LEVEL 3: SPACE STATION DOCKING COMMAND CONSOLE
+   Harmonized with Level 2 Proton Launch & Level 1 Crew Console
+   ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+.docking-dashboard {
+  --rust: #c06834;
+  --rust-bright: #ed9255;
+  --ink: #1c0f0d;
+  --panel: #261311;
+  --panel-deep: #110a09;
+  --cream: #f4e7db;
+  --cyan-glow: #7ee7f5;
+  --amber-glow: #ffad66;
+  --safe-green: #48e58a;
+  --hazard-red: #ff4d4d;
+}
 
-@keyframes star-drift{to{background-position:137px 113px}}
+/* ============================================================
+   DOCKING APPROACH PROJECTION (Top-Left Widget)
+   ============================================================ */
 
-@keyframes background-scan{0%,to{opacity:0;transform:translate(-45%)}45%,60%{opacity:1}80%{opacity:0;transform:translate(45%)}}
-
-@keyframes moon-drift{0%{transform:translate(-8px,4px)}to{transform:translate(10px,-8px)}}
-
-@keyframes moon-glow{0%{filter:brightness(.85)}to{filter:brightness(1.15)}}
-
-@keyframes stress-pulse{0%,to{opacity:.3;filter:brightness();box-shadow:0 0 8px #fff30047}50%{opacity:1;filter:brightness(1.2);box-shadow:0 0 15px #fff300b8}}
-
-@keyframes stress-scan{0%{transform:translate(-120%)}55%,to{transform:translate(120%)}}
-
-@keyframes stress-value-pulse{0%,to{opacity:.3;text-shadow:0 0 #0000}50%{opacity:1;text-shadow:0 0 8px #fff76ccc}}
-
-@keyframes strobe-hazard{0%{border-color:#f43f5e4d;box-shadow:0 0 8px #f43f5e59,inset 0 0 12px #f43f5e14}to{border-color:#f43f5e;box-shadow:0 0 16px #f43f5e,0 0 42px #f43f5ed9,inset 0 0 24px #f43f5e33}}
-
-@keyframes idle-float{0%,to{transform:translateY(-8px)}50%{transform:translateY(8px)}}
-
-@keyframes capsule-approach{0%{opacity:.72;translate:82px 68px}to{opacity:1;translate:0}}
-
-@keyframes capsule-glow{0%{filter:drop-shadow(0 0 3px #28f7f266)}to{filter:drop-shadow(0 0 12px #28f7f2f2)}}
-
-@keyframes docking-zone-pulse{0%,to{opacity:.55;transform:translate(-50%,-50%)scale(.97)}50%{opacity:1;transform:translate(-50%,-50%)scale(1.03)}}
-
-@keyframes radar-rotation{to{transform:rotate(360deg)}}
-
-.docking-mission-shell {
-  font-family: 'Share Tech Mono', monospace;
-  background: radial-gradient(circle at 34% 43%, #0c2f444d, #0000 34%), #020813;
-  min-height: 100vh;
-  padding: 12px 20px 18px;
+.approach-projection {
+  position: relative;
+  min-height: 180px;
   overflow: hidden;
-  color: #dff7fb;
-  box-sizing: border-box;
-  position: relative;
-  user-select: none;
-  -webkit-user-select: none;
+  border: 1px solid var(--rust);
+  background:
+    radial-gradient(circle at 30% 20%, rgba(192, 104, 52, 0.08), transparent 40%),
+    rgba(25, 12, 11, 0.9);
 }
 
-.docking-mission-shell * {
-  box-sizing: border-box;
-}
-
-.docking-mission-shell .mission-header {
-  justify-content: space-between;
-  align-items: flex-start;
-  height: 46px;
-  display: flex;
-}
-
-.docking-mission-shell .mission-header h1 {
-  color: #6ce5e6;
-  letter-spacing: 0.5px;
-  text-shadow: 0 0 8px #28f7f280;
-  margin: 0;
-  font-size: 24px;
-  font-weight: 400;
-}
-
-.docking-mission-shell .window-controls {
-  gap: 7px;
-  margin-top: 5px;
-  display: flex;
-}
-
-.docking-mission-shell .window-controls button {
-  color: #8da7ba;
-  background: #121b2b;
-  border: 1px solid #28374c;
-  border-radius: 5px;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  display: grid;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.docking-mission-shell .window-controls button:hover {
-  color: #ffffff;
-  border-color: #28f7f2;
-  box-shadow: 0 0 8px #28f7f280;
-}
-
-.docking-mission-shell .mission-layout {
-  grid-template-columns: minmax(0, 4fr) minmax(300px, 1.35fr);
-  gap: 18px;
-  display: grid;
-}
-
-.docking-mission-shell .simulator-panel {
-  background: radial-gradient(at 51% 48%, #0b3f4e4d, #0000 49%),
-              repeating-linear-gradient(0deg, #53bccc0d 0 1px, #0000 1px 4px),
-              #030b16;
-  border: 2px solid #44cdd1;
-  border-radius: 8px;
-  height: calc(100vh - 130px);
-  min-height: 570px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: inset 0 0 35px #13bed91f, 0 0 9px #28f7f226;
-}
-
-.docking-mission-shell .simulator-panel:after {
-  content: "";
-  pointer-events: none;
-  opacity: 0.34;
-  background-image: radial-gradient(#d4faff 0.7px, #0000 0.8px);
-  background-size: 137px 113px;
-  animation: 18s linear infinite star-drift;
+.approach-projection::before {
   position: absolute;
-  inset: 0;
-}
-
-.docking-mission-shell .simulator-panel:before {
-  content: "";
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(115deg, #0000 35%, #28f7f214 50%, #0000 65%);
-  animation: 9s ease-in-out infinite background-scan;
-  position: absolute;
-  inset: -20%;
-  transform: translate(-45%);
-}
-
-.docking-mission-shell .radar {
-  width: 72%;
-  height: 90%;
-  color: #28f7f2;
-  filter: drop-shadow(0 0 5px #28f7f2bf);
-  position: absolute;
-  inset: 4% 12% 5% 16%;
-}
-
-.docking-mission-shell .radar-sweep {
-  stroke: #9dff72;
-  stroke-width: 3px;
-  stroke-linecap: round;
-  opacity: 0.9;
-  transform-box: fill-box;
-  transform-origin: 50%;
-  filter: drop-shadow(0 0 6px #9dff72);
-  animation: 4s linear infinite radar-rotation;
-}
-
-.docking-mission-shell .iss-node {
-  text-align: center;
-  color: #67fbfb;
-  filter: drop-shadow(0 0 7px #28f7f2a6);
-  width: 220px;
-  position: absolute;
-  top: 50%;
-  left: 51%;
-  transform: translate(-50%, -50%);
+  inset: 7px;
+  border: 1px solid rgba(192, 104, 52, 0.22);
+  content: '';
   pointer-events: none;
 }
 
-.docking-mission-shell .iss-icon {
-  width: 220px;
-}
-
-.docking-mission-shell .node-label {
-  letter-spacing: 1px;
-  color: #7ffcff;
-  margin-top: -8px;
-  font-size: 10px;
-  display: block;
-}
-
-.docking-mission-shell .capsule-node {
-  color: #5ae7eb;
-  filter: drop-shadow(0 0 5px #28f7f2b3);
-  z-index: 3;
-  transition: transform 0.15s ease-out;
-  position: absolute;
-  top: 50%;
-  left: 51%;
-}
-
-.docking-mission-shell .capsule-icon {
-  width: 92px;
-  display: block;
-  animation: 1.2s ease-in-out infinite alternate capsule-glow;
-}
-
-.docking-mission-shell .thruster-controls {
-  grid-template-rows: 27px 27px 27px;
-  grid-template-columns: 30px 30px 30px;
-  place-content: center;
-  gap: 0 9px;
-  display: grid;
-  position: absolute;
-  inset: -35px -48px -37px;
-}
-
-.docking-mission-shell .thruster-controls button {
-  color: #56eef1;
-  filter: drop-shadow(0 0 4px #32e9ec);
-  cursor: pointer;
-  background: transparent;
-  border: 0;
-  outline: none;
-  transition: transform 0.1s, color 0.1s;
-}
-
-.docking-mission-shell .thruster-controls button:first-child { grid-column: 2; }
-.docking-mission-shell .thruster-controls button:nth-child(2) { grid-area: 2 / 1; }
-.docking-mission-shell .thruster-controls button:nth-child(3) { grid-area: 2 / 3; }
-.docking-mission-shell .thruster-controls button:nth-child(4) { grid-area: 3 / 2; }
-
-.docking-mission-shell .thruster-controls button:hover {
-  color: #ffffff;
-  transform: scale(1.22);
-}
-
-.docking-mission-shell .thruster-controls button:active {
-  transform: scale(0.95);
-}
-
-.docking-mission-shell .thruster-controls svg {
-  stroke-width: 1.5px;
-  width: 28px;
-  height: 28px;
-}
-
-.docking-mission-shell .diagnostic-card {
-  z-index: 4;
-  background: linear-gradient(135deg, #114360e0, #0a314ec7);
-  border: 1px solid #58c7e2;
-  border-radius: 8px;
-  width: 310px;
-  padding: 15px 15px 14px;
-  position: absolute;
-  top: 35%;
-  left: 34px;
-  box-shadow: inset 0 0 25px #1adaff29, 0 0 10px #11a8d61f;
-}
-
-.docking-mission-shell .card-kicker {
-  color: #84e6f1;
-  white-space: nowrap;
-  font-size: 15px;
-}
-
-.docking-mission-shell .card-rule,
-.docking-mission-shell .telemetry-rule {
-  background: #aee5ee61;
-  height: 1px;
-  margin: 10px 0 12px;
-}
-
-.docking-mission-shell .diagnostic-card p {
-  color: #f2fbff;
-  margin: 0 0 19px;
-  font-size: 14px;
-  line-height: 1.45;
-}
-
-.docking-mission-shell .diagnostic-card p:last-child {
-  margin-bottom: 0;
-}
-
-.docking-mission-shell .simulator-status {
-  z-index: 5;
-  color: #82ebefb8;
-  letter-spacing: 1px;
-  font-size: 11px;
-  position: absolute;
-  bottom: 14px;
-  left: 22px;
-}
-
-.docking-mission-shell .simulator-status span {
-  color: #ff704a;
-  margin: 0 8px;
-}
-
-.docking-mission-shell .planet {
-  opacity: 0.65;
-  z-index: 1;
-  background: radial-gradient(circle at 30% 27%, #a6a8a8, #626872 43%, #151b27 72%);
-  border-radius: 50%;
-  width: 86px;
-  height: 86px;
-  animation: 12s ease-in-out infinite alternate moon-drift, 4s ease-in-out infinite alternate moon-glow;
-  position: absolute;
-  top: 7%;
-  right: 12%;
-  box-shadow: -12px 0 18px #a7b3c329, 12px 0 22px #000000e6;
-}
-
-.docking-mission-shell .planet:after {
-  content: "";
-  border: 1px solid #dcf0f52e;
-  border-radius: 50%;
-  position: absolute;
-  inset: 8px;
-  box-shadow: inset -8px -4px 10px #00000059;
-}
-
-.docking-mission-shell .star {
-  z-index: 1;
-  background: #d1ffff;
-  border-radius: 50%;
-  width: 2px;
-  height: 2px;
-  position: absolute;
-  box-shadow: 0 0 6px #fff;
-}
-
-.docking-mission-shell .star-one { top: 14%; left: 17%; }
-.docking-mission-shell .star-two { top: 22%; left: 83%; }
-.docking-mission-shell .star-three { top: 74%; left: 92%; }
-
-.docking-mission-shell .docking-telemetry-panel {
-  background: linear-gradient(145deg, #1a2030, #171d2d 65%, #242a3b);
-  border: 1px solid #37425a;
-  border-radius: 8px;
-  min-height: calc(100vh - 130px);
-  padding: 0;
-  box-shadow: inset 0 0 20px #97aac10f;
-}
-
-.docking-mission-shell .telemetry-card {
-  margin: 16px 14px;
-  padding: 0 0 16px;
-}
-
-.docking-mission-shell .telemetry-card h2 {
-  color: #f4f5f6;
-  letter-spacing: 0.7px;
-  margin: 0;
-  font-size: 16px;
-  font-weight: 400;
-}
-
-.docking-mission-shell .fuel-card h2 {
-  font-size: 17px;
-}
-
-.docking-mission-shell .meter-heading {
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 7px;
-  font-size: 14px;
-  display: flex;
-}
-
-.docking-mission-shell .meter-heading strong {
-  color: #ffb15d;
-  font-weight: 400;
-}
-
-.docking-mission-shell .meter {
-  background: #172535;
-  border: 1px solid #8cc6ce;
-  border-radius: 5px;
-  height: 35px;
-  padding: 3px;
-  overflow: hidden;
-}
-
-.docking-mission-shell .meter-fill {
-  background: #ff793f;
-  border-radius: 2px;
-  height: 100%;
-  transition: width 0.2s, background 0.2s;
-  box-shadow: 0 0 10px #ff68316b;
-}
-
-.docking-mission-shell .meter-fill:after {
-  content: "";
-  background: repeating-linear-gradient(90deg, #0000 0 14px, #2c2c31a6 14px 15px);
-  height: 100%;
-  display: block;
-}
-
-.docking-mission-shell .telemetry-card p {
-  color: #f8f4ed;
-  margin: 9px 0 0;
-  font-size: 12px;
-}
-
-.docking-mission-shell .telemetry-card p b {
-  color: #ffb05c;
-}
-
-.docking-mission-shell .telemetry-card p em {
-  color: #ffae5c;
-  font-style: normal;
-}
-
-.docking-mission-shell .sidebar-dashes {
-  text-align: right;
-  color: #ff7043;
-  letter-spacing: -1px;
-  margin: 7px 0;
-  padding-right: 17px;
-  font-size: 21px;
-}
-
-.docking-mission-shell .health-card {
-  margin-top: 13px;
-}
-
-.docking-mission-shell .inner-health {
-  background: #05080e;
-  border: 1px solid #04070c;
-  border-radius: 9px;
-  margin-top: 8px;
-  padding: 14px;
-  box-shadow: inset 0 0 8px #000c;
-}
-
-.docking-mission-shell .inner-health .meter-heading {
-  font-size: 14px;
-}
-
-.docking-mission-shell .inner-health .meter-heading strong {
-  color: #ffff72;
-  animation: 1.8s ease-in-out infinite stress-value-pulse;
-}
-
-.docking-mission-shell .stress-fill {
-  background: #eff000;
-  animation: 0.8s ease-in-out infinite stress-pulse;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 0 9px #fff3004d;
-}
-
-.docking-mission-shell .stress-fill:before {
-  content: "";
-  background: linear-gradient(105deg, #0000 20%, #ffffd2bf 48%, #0000 76%);
-  animation: 2.7s ease-in-out infinite stress-scan;
-  position: absolute;
-  inset: 0;
-  transform: translate(-120%);
-}
-
-.docking-mission-shell .inner-health p strong {
-  color: #fff76c;
-  font-weight: 400;
-}
-
-.docking-mission-shell .warning-copy {
-  color: #f0eef0;
-  border-top: 1px solid #333845;
-  margin-top: 23px;
-  padding-top: 18px;
-  font-size: 13px;
-  line-height: 1.55;
-}
-
-.docking-mission-shell .emergency-modal {
-  z-index: 20;
-  background: #02081333;
-  backdrop-filter: blur(4px);
-  place-items: center;
-  display: grid;
-  position: absolute;
-  inset: 0;
-}
-
-.docking-mission-shell .emergency-frame {
-  pointer-events: auto;
-  background: #110505f2;
-  border: 2px solid #f43f5e;
-  width: 360px;
-  padding: 20px 20px 18px;
-  animation: 3.2s ease-in-out infinite idle-float, 0.6s ease-in-out infinite alternate strobe-hazard;
-  position: relative;
-  box-shadow: 0 0 12px #f43f5e, 0 0 34px #f43f5ebf, inset 0 0 20px #f43f5e24;
-  border-radius: 6px;
-}
-
-.docking-mission-shell .emergency-close {
-  color: #ff7687;
-  cursor: pointer;
-  background: #2b0b14;
-  border: 1px solid #f43f5e;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  display: grid;
-  position: absolute;
-  top: 7px;
-  right: 7px;
-}
-
-.docking-mission-shell .emergency-close:hover {
-  color: #fff;
-  background: #f43f5e;
-}
-
-.docking-mission-shell .emergency-frame h2 {
-  color: #ff654e;
-  text-shadow: 0 0 8px #ff583ecc;
-  margin: 0 28px 0 0;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.15;
-}
-
-.docking-mission-shell .emergency-rule {
-  background: #ff6a648c;
-  height: 1px;
-  margin: 14px 0 13px;
-}
-
-.docking-mission-shell .emergency-copy {
-  color: #f8e9e7;
-  gap: 10px;
-  margin: 0;
-  padding-left: 18px;
-  font-family: Arial, sans-serif;
-  font-size: 13px;
-  line-height: 1.42;
-  display: grid;
-}
-
-.docking-mission-shell .emergency-copy li::marker {
-  color: #ff526b;
-}
-
-.docking-mission-shell .flight-tip {
-  color: #d9f6ff;
-  background: #08324ee6;
-  border: 1px solid #29a9e8;
-  margin-top: 16px;
-  padding: 12px 12px 10px;
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  line-height: 1.38;
-  box-shadow: inset 0 0 14px #1497dc47, 0 0 8px #1984c840;
-  border-radius: 4px;
-}
-
-.docking-mission-shell .flight-tip strong {
-  color: #71e5ff;
-  letter-spacing: 0.3px;
-  margin-bottom: 7px;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 13px;
-  display: block;
-}
-
-.docking-mission-shell .flight-tip p {
-  margin: 5px 0 0;
-}
-
-.docking-mission-shell .explanation-target {
-  position: relative;
-}
-
-.docking-mission-shell .explanation-card {
-  z-index: 40;
-  color: #e8fbff;
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  text-transform: none;
-  background: #090d16f2;
-  border: 1px solid #28f7f2;
-  border-radius: 8px;
-  flex-direction: column;
-  gap: 6px;
-  width: max-content;
-  max-width: 260px;
-  padding: 12px;
-  font-family: 'Share Tech Mono', monospace;
-  transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
-  display: flex;
-  position: absolute;
-  transform: translateY(4px);
-  box-shadow: 0 0 14px #28f7f238;
-}
-
-.docking-mission-shell .explanation-card strong {
-  color: #6df8f6;
-  font-size: 13px;
-  line-height: 1.2;
-}
-
-.docking-mission-shell .explanation-card p {
-  color: #d6eaf1;
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.45;
-}
-
-.docking-mission-shell .explanation-target:hover .explanation-card,
-.docking-mission-shell .explanation-target:focus-within .explanation-card {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.docking-mission-shell .radar-target {
-  z-index: 10;
-  position: absolute;
-  inset: 4% 12% 5% 16%;
-}
-
-.docking-mission-shell .radar-target .radar {
-  pointer-events: none;
+.approach-projection svg {
   width: 100%;
-  height: 100%;
-  inset: 0;
+  height: calc(100% - 27px);
 }
 
-.docking-mission-shell .docking-zone {
-  z-index: 5;
-  color: #aaff7d;
-  border: 2px dashed #9dff72;
-  border-radius: 12px;
-  width: 190px;
-  height: 145px;
-  animation: 1.6s ease-in-out infinite docking-zone-pulse;
+.approach-corridor-path {
+  fill: none;
+  stroke: var(--rust-bright);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+
+.approach-vector-line {
+  fill: none;
+  stroke: #ffc482;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 6px rgba(237, 146, 85, 0.7));
+}
+
+.approach-iss-target {
+  fill: #e68d50;
+  stroke: #fff;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 8px #ff9e42);
+}
+
+.approach-craft-node {
+  fill: #66d9eb;
+  stroke: #fff;
+  stroke-width: 1.5;
+  animation: craftBlink 1.8s infinite ease-in-out;
+}
+
+@keyframes craftBlink {
+  0%, 100% {
+    r: 4;
+    opacity: 0.8;
+  }
+  50% {
+    r: 6.5;
+    opacity: 1;
+  }
+}
+
+/* ============================================================
+   SPACE STATION BLUEPRINT SCHEMATIC (Right Main Column)
+   ============================================================ */
+
+.station-blueprint {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  overflow: hidden;
+  grid-template-rows: 27px 1fr 27px;
+  border: 1px solid var(--rust);
+  background:
+    radial-gradient(circle at 50% 30%, rgba(192, 104, 52, 0.09), transparent 50%),
+    rgba(25, 12, 11, 0.92);
+}
+
+.station-blueprint::before {
   position: absolute;
-  top: 50%;
+  inset: 7px;
+  border: 1px solid rgba(192, 104, 52, 0.22);
+  content: '';
+  pointer-events: none;
+}
+
+.station-blueprint > svg {
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+}
+
+.station-blueprint .blueprint-grid path {
+  fill: none;
+  opacity: 0.16;
+  stroke: #74412d;
+  stroke-width: 0.7;
+}
+
+/* APDS & ISS SVG Layers */
+.station-port-hull {
+  fill: rgba(45, 23, 19, 0.7);
+  stroke: #dc8753;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.apds-guide-petal {
+  fill: #441e16;
+  stroke: #f0a36e;
+  stroke-width: 1.8;
+}
+
+.apds-latch-hook {
+  fill: #e69860;
+  stroke: #ffd4a8;
+  stroke-width: 1.2;
+}
+
+.rcs-thruster-pod {
+  fill: #3a1a14;
+  stroke: #ed9255;
+  stroke-width: 1.5;
+}
+
+.rcs-exhaust-plume {
+  fill: none;
+  stroke: #ffd0a0;
+  stroke-width: 3;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px #ff9e42);
+}
+
+.lidar-beam-cone {
+  fill: rgba(126, 231, 245, 0.08);
+  stroke: #7ee7f5;
+  stroke-width: 1.2;
+  stroke-dasharray: 4 3;
+}
+
+.vestibule-passageway {
+  fill: rgba(30, 14, 11, 0.9);
+  stroke: #5bd4e6;
+  stroke-width: 1.6;
+}
+
+/* ============================================================
+   NASA OSDR MICROGRAVITY RESEARCH STAGE
+   ============================================================ */
+
+.osdr-simulator {
+  display: grid;
+  height: calc(100svh - 88px);
+  min-height: 610px;
+  grid-template-columns: minmax(280px, 0.92fr) minmax(430px, 1.08fr);
+  gap: clamp(14px, 1.7vw, 24px);
+}
+
+.microgravity-stage {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--rust);
+  background:
+    radial-gradient(circle at 50% 30%, rgba(192, 104, 52, 0.15), transparent 45%),
+    linear-gradient(180deg, #180c0a 0%, #0e0605 100%);
+}
+
+.microgravity-stage::before {
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(192, 104, 52, 0.22);
+  content: '';
+  pointer-events: none;
+  z-index: 6;
+}
+
+.floating-crew-silhouette {
+  position: absolute;
+  top: 48%;
   left: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 12px #9dff728c, inset 0 0 14px #9dff721f;
-}
-
-.docking-mission-shell .docking-zone > span {
-  white-space: nowrap;
-  color: #baff9b;
-  text-shadow: 0 0 7px #9dff72;
-  font: 10px 'Share Tech Mono', monospace;
-  position: absolute;
-  bottom: -23px;
-  left: 50%;
-  transform: translate(-50%);
-}
-
-.docking-mission-shell .docking-zone .docking-explanation {
-  width: 240px;
-  top: 50%;
-  left: calc(100% + 18px);
-  right: auto;
-  transform: translateY(calc(4px - 50%));
-}
-
-.docking-mission-shell .docking-zone:hover .docking-explanation,
-.docking-mission-shell .docking-zone:focus .docking-explanation {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(-50%);
-}
-
-.docking-mission-shell .radar-target .explanation-card {
-  top: 20%;
-  left: 50%;
-  transform: translate(-50%, 4px);
-}
-
-.docking-mission-shell .radar-target:hover .explanation-card {
-  transform: translate(-50%);
-}
-
-.docking-mission-shell .fuel-target .explanation-card {
-  top: calc(100% + 10px);
-  right: 0;
-}
-
-.docking-mission-shell .health-target .explanation-card {
-  top: 8px;
-  right: calc(100% + 12px);
-}
-
-.docking-mission-shell .science-tip-card {
-  background: linear-gradient(135deg, #08364ce6, #08192aeb);
-  border: 1px solid #2bb7d4;
-  border-radius: 7px;
-  margin: 18px 14px 16px;
-  padding: 13px 14px 14px;
-  box-shadow: inset 0 0 16px #28d6ee1f, 0 0 8px #1cabcc29;
-}
-
-.docking-mission-shell .science-tip-card h2 {
-  color: #7ce7f3;
-  letter-spacing: 0.5px;
-  margin: 0 0 8px;
-  font-size: 14px;
-  font-weight: 400;
-}
-
-.docking-mission-shell .science-tip-card p {
-  color: #dff7fb;
-  text-transform: none;
-  margin: 0;
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  line-height: 1.45;
-}
-
-.docking-mission-shell .lock-target {
-  margin: 20px auto 0;
+  width: 200px;
+  height: 280px;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: zeroGFloat 5s infinite ease-in-out;
+  z-index: 5;
+}
+
+@keyframes zeroGFloat {
+  0%, 100% {
+    transform: translate(-50%, -50%) rotate(0deg) translateY(-8px);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(3deg) translateY(12px);
+  }
+}
+
+.stress-pulse-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 173, 102, 0.6);
+  animation: stressPulseRing 2.4s infinite ease-out;
+}
+
+@keyframes stressPulseRing {
+  0% {
+    width: 20px;
+    height: 20px;
+    opacity: 0.9;
+  }
+  100% {
+    width: 130px;
+    height: 130px;
+    opacity: 0;
+  }
+}
+
+/* ============================================================
+   LIVE SPACE STATION DOCKING RADAR STAGE
+   ============================================================ */
+
+.docking-simulator-view {
+  display: grid;
+  height: calc(100svh - 88px);
+  min-height: 610px;
+  grid-template-columns: minmax(280px, 1fr) minmax(420px, 1fr);
+  gap: clamp(14px, 1.7vw, 24px);
+}
+
+.docking-radar-stage {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--rust);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(192, 104, 52, 0.12), transparent 55%),
+    #100807;
+  display: flex;
+  align-items: center;
   justify-content: center;
 }
 
-.docking-mission-shell .lock-target .explanation-card {
-  bottom: calc(100% + 10px);
+.docking-radar-stage::before {
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(192, 104, 52, 0.22);
+  content: '';
+  pointer-events: none;
+  z-index: 6;
+}
+
+/* Rotating Radar Grid */
+.radar-grid-svg {
+  position: absolute;
+  width: min(88%, 520px);
+  height: min(88%, 520px);
+  color: rgba(192, 104, 52, 0.45);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.radar-sweep-beam {
+  transform-origin: 350px 300px;
+  animation: radarRotation 6s infinite linear;
+  stroke: var(--rust-bright);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 6px var(--rust-bright));
+}
+
+@keyframes radarRotation {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Central Target Docking Corridor */
+.docking-target-zone {
+  position: absolute;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%, 4px);
+  transform: translate(-50%, -50%);
+  width: 90px;
+  height: 90px;
+  border: 2px dashed var(--safe-green);
+  border-radius: 8px;
+  background: rgba(72, 229, 138, 0.08);
+  box-shadow: 0 0 15px rgba(72, 229, 138, 0.25);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 4;
+  animation: targetPulse 2.4s infinite ease-in-out;
 }
 
-.docking-mission-shell .lock-target:hover .explanation-card {
-  transform: translate(-50%);
+@keyframes targetPulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(0.97);
+    opacity: 0.75;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.03);
+    opacity: 1;
+  }
 }
 
-.docking-mission-shell .lock-button {
-  color: #65f1f0;
-  letter-spacing: 0.5px;
+.docking-target-zone span {
+  font-size: 7px;
+  color: var(--safe-green);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-top: 4px;
+}
+
+/* Central Locked ISS Node */
+.station-iss-node {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 5;
+  color: #f4e7db;
+}
+
+.station-iss-node svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 8px rgba(237, 146, 85, 0.45));
+}
+
+.station-iss-label {
+  position: absolute;
+  bottom: -18px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--rust-bright);
+  white-space: nowrap;
+}
+
+/* Maneuverable Capsule Node */
+.maneuver-capsule-node {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 70px;
+  height: 70px;
+  margin-top: -35px;
+  margin-left: -35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 7;
+  transition: transform 120ms ease-out;
+}
+
+.maneuver-capsule-node.is-aligned {
+  filter: drop-shadow(0 0 10px rgba(72, 229, 138, 0.7));
+}
+
+.maneuver-capsule-svg {
+  width: 44px;
+  height: 44px;
+  color: #ffbe85;
+}
+
+/* Directional Thruster Arrows Overlay */
+.capsule-thruster-buttons {
+  position: absolute;
+  inset: -24px;
+  pointer-events: none;
+}
+
+.capsule-thruster-buttons button {
+  position: absolute;
+  pointer-events: auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--rust);
+  background: rgba(26, 12, 10, 0.9);
+  color: var(--rust-bright);
+  display: grid;
+  place-items: center;
   cursor: pointer;
-  background: #0c5b6938;
-  border: 2px solid #24f6f3;
-  border-radius: 7px;
-  min-width: 350px;
-  padding: 10px 22px;
-  font-size: 20px;
-  font-family: 'Share Tech Mono', monospace;
-  transition: all 0.2s;
-  display: block;
-  box-shadow: 0 0 7px #0fe7e7, inset 0 0 9px #26f1f059;
+  transition: all 120ms ease;
 }
 
-.docking-mission-shell .lock-button:hover {
-  color: #ffffff;
-  background: #14899661;
-  box-shadow: 0 0 15px #0fe7e7, inset 0 0 14px #26f1f08c;
+.capsule-thruster-buttons button:hover:not(:disabled) {
+  border-color: #fff;
+  background: var(--rust);
+  color: #fff;
+  box-shadow: 0 0 8px var(--rust-bright);
 }
 
-.docking-mission-shell .lock-button.locked {
-  color: #ffffff;
-  border-color: #ffb45c;
-  background: #ff884826;
-  box-shadow: 0 0 16px #ff8848, inset 0 0 12px #ffb45c40;
+.capsule-thruster-buttons button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
-.docking-mission-shell .aligned-capsule .capsule-icon {
-  filter: drop-shadow(0 0 10px #9dff72) !important;
+.thruster-btn-up {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
 }
+
+.thruster-btn-down {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.thruster-btn-left {
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.thruster-btn-right {
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+/* Stage Overlay Diagnostics */
+.docking-overlay-status {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  display: flex;
+  gap: 8px;
+  z-index: 8;
+}
+
+.docking-status-tag {
+  padding: 3px 8px;
+  border: 1px solid rgba(192, 104, 52, 0.5);
+  background: rgba(16, 9, 8, 0.85);
+  color: #f4e7db;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.docking-status-tag.active {
+  border-color: var(--safe-green);
+  color: #aff6cc;
+  box-shadow: 0 0 8px rgba(72, 229, 138, 0.3);
+}
+
+/* ============================================================
+   RESPONSIVE DESIGN ADAPTATIONS
+   ============================================================ */
 
 @media (max-width: 900px) {
-  .docking-mission-shell {
-    overflow: auto;
-  }
-  .docking-mission-shell .mission-layout {
+  .osdr-simulator,
+  .docking-simulator-view {
     grid-template-columns: 1fr;
+    height: auto;
+    min-height: 0;
   }
-  .docking-mission-shell .docking-telemetry-panel {
-    min-height: auto;
-  }
-  .docking-mission-shell .simulator-panel {
-    height: 650px;
-  }
-  .docking-mission-shell .lock-button {
-    margin-bottom: 20px;
+
+  .microgravity-stage,
+  .docking-radar-stage {
+    min-height: 320px;
   }
 }

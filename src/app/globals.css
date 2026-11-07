@@ -1087,3 +1087,121 @@ footer {
     }
   }
 }
+
+/* ==========================================================================
+   ADVANCED SCI-FI HOVER & INTERACTION POLISH
+   ========================================================================== */
+
+/* Mission Card Glow & Elevation */
+.mission-card {
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+              border-color 0.25s ease,
+              box-shadow 0.25s ease,
+              background 0.25s ease;
+}
+
+.mission-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  border-color: #61f2ff;
+  box-shadow: 0 0 35px rgba(40, 247, 242, 0.45),
+              inset 0 0 25px rgba(40, 247, 242, 0.2);
+}
+
+.mission-card:hover .corner {
+  border-color: #ffffff;
+  box-shadow: 0 0 8px #28f7f2;
+}
+
+.mission-card:hover .mode-icon {
+  filter: drop-shadow(0 0 8px #28f7f2);
+  transform: scale(1.06);
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+/* Launch Mission Tiles Hover */
+.launch-mission {
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+.launch-mission:hover {
+  transform: translateY(-4px);
+}
+
+.launch-mission:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.launch-mission:hover .launch-tile {
+  border-color: #28f7f2;
+  box-shadow: 0 0 25px rgba(40, 247, 242, 0.55),
+              inset 0 0 20px rgba(40, 247, 242, 0.3);
+}
+
+.launch-mission:hover .launch-name {
+  color: #28f7f2;
+  text-shadow: 0 0 8px rgba(40, 247, 242, 0.6);
+}
+
+.launch-mission:hover .launch-tile svg {
+  filter: drop-shadow(0 0 8px rgba(40, 247, 242, 0.8));
+  transform: translate(-50%, -50%) scale(1.08);
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+/* Sequential Campaign Advance Banner Button */
+.campaign-advance-banner {
+  margin-top: 18px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(8, 48, 70, 0.95), rgba(4, 25, 42, 0.95));
+  border: 2px solid #28f7f2;
+  border-radius: 8px;
+  box-shadow: 0 0 25px rgba(40, 247, 242, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  animation: fadeInModal 0.3s ease-out;
+}
+
+.campaign-advance-info h3 {
+  margin: 0 0 4px;
+  font-family: var(--font-orbitron), sans-serif;
+  font-size: 15px;
+  color: #34d399;
+  letter-spacing: 0.08em;
+}
+
+.campaign-advance-info p {
+  margin: 0;
+  font-size: 12px;
+  color: #c8edf5;
+}
+
+.campaign-advance-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #059669, #047857);
+  border: 1.5px solid #34d399;
+  border-radius: 6px;
+  color: #ffffff;
+  font-family: var(--font-orbitron), sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(52, 211, 153, 0.4);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.campaign-advance-btn:hover {
+  background: linear-gradient(135deg, #10b981, #059669);
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(52, 211, 153, 0.65);
+}
+
