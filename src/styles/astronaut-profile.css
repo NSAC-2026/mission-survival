@@ -1,11 +1,12 @@
 /* ============================================================
-   ASTRONAUT ORIENTATION & CREW PROFILE DASHBOARD
-   Harmonized with Level 2 Proton Launch Command Console
+   LEVEL 1: ASTRONAUT CADET FLIGHT ACADEMY
+   Gamified Step-by-Step Interactive Experience for Kids & Cadets
    ============================================================ */
 
 .astronaut-dashboard {
   --rust: #c06834;
   --rust-bright: #ed9255;
+  --rust-dark: #7a3a18;
   --ink: #1c0f0d;
   --panel: #261311;
   --panel-deep: #110a09;
@@ -14,129 +15,121 @@
   --amber-glow: #ffad66;
   --safe-green: #48e58a;
   --hazard-red: #ff4d4d;
+  --star-gold: #ffd700;
 }
 
 /* ============================================================
-   CREW VITAL & BIOMETRIC PROJECTION (Top-Left Widget)
+   TOP CADET STATUS & QUEST NAVIGATION
    ============================================================ */
 
-.vital-projection {
-  position: relative;
-  min-height: 180px;
-  overflow: hidden;
-  border: 1px solid var(--rust);
-  background:
-    radial-gradient(circle at 30% 20%, rgba(192, 104, 52, 0.08), transparent 40%),
-    rgba(25, 12, 11, 0.9);
-}
-
-.vital-projection::before {
-  position: absolute;
-  inset: 7px;
-  border: 1px solid rgba(192, 104, 52, 0.22);
-  content: '';
-  pointer-events: none;
-}
-
-.vital-projection svg {
-  width: 100%;
-  height: calc(100% - 27px);
-}
-
-.vital-grid-line {
-  stroke: rgba(192, 104, 52, 0.16);
-  stroke-width: 0.7;
-}
-
-.ecg-trace {
-  fill: none;
-  stroke: var(--rust-bright);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  filter: drop-shadow(0 0 6px rgba(237, 146, 85, 0.8));
-}
-
-.respiration-trace {
-  fill: none;
-  stroke: #66b5c9;
-  stroke-width: 1.2;
-  stroke-linecap: round;
-  opacity: 0.45;
-  stroke-dasharray: 4 3;
-}
-
-.vital-pulse-blip {
-  fill: #ffdd99;
-  filter: drop-shadow(0 0 8px #ffb347);
-  animation: ecgPulse 1.8s infinite ease-in-out;
-}
-
-@keyframes ecgPulse {
-  0%, 100% {
-    r: 3.5;
-    opacity: 0.8;
-  }
-  50% {
-    r: 6;
-    opacity: 1;
-  }
-}
-
-.vital-badges {
-  position: absolute;
-  top: 36px;
-  right: 14px;
+.cadet-topbar-center {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  align-items: flex-end;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-.vital-badge-item {
+.quest-nav-pill {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 14px;
+  border: 1px solid #573022;
+  color: #c49d88;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  background: rgba(22, 10, 8, 0.7);
+  cursor: pointer;
+  border-radius: 999px;
+  transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.quest-nav-pill:hover {
+  border-color: var(--rust-bright);
+  color: #fff;
+  background: rgba(192, 104, 52, 0.2);
+  transform: translateY(-1px);
+}
+
+.quest-nav-pill.active {
+  border-color: var(--rust-bright);
+  color: #fff;
+  background: linear-gradient(135deg, #c06834 0%, #8c3b17 100%);
+  box-shadow: 0 0 14px rgba(237, 146, 85, 0.5);
+}
+
+.quest-nav-pill.completed {
+  border-color: var(--safe-green);
+  color: #bbf7d0;
+}
+
+.quest-pill-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  font-size: 10px;
+}
+
+.quest-nav-pill.completed .quest-pill-num {
+  background: var(--safe-green);
+  color: #0d2613;
+}
+
+.cadet-xp-badge {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 2px 7px;
-  border: 1px solid rgba(192, 104, 52, 0.4);
-  background: rgba(16, 9, 8, 0.75);
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  color: #e6c8b4;
+  padding: 4px 10px;
+  border: 1px solid #784227;
+  border-radius: 999px;
+  background: rgba(26, 12, 10, 0.85);
+  font-size: 10px;
   font-weight: 700;
+  color: var(--star-gold);
+  letter-spacing: 0.05em;
 }
 
-.vital-badge-item.active {
-  border-color: var(--rust-bright);
-  color: #fff;
-  background: rgba(192, 104, 52, 0.22);
-}
-
-.vital-badge-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--safe-green);
-  box-shadow: 0 0 6px var(--safe-green);
+.cadet-xp-badge svg {
+  width: 13px;
+  height: 13px;
+  fill: var(--star-gold);
+  color: var(--star-gold);
+  flex-shrink: 0;
 }
 
 /* ============================================================
-   ASTRONAUT BLUEPRINT SCHEMATIC (Right Main Column)
+   QUEST 1: SUIT UP! (INTERACTIVE GEAR WORKBENCH)
    ============================================================ */
 
-.astronaut-blueprint {
-  position: relative;
+.suit-builder-grid {
   display: grid;
-  min-width: 0;
-  overflow: hidden;
-  grid-template-rows: 27px 1fr 27px;
-  border: 1px solid var(--rust);
-  background:
-    radial-gradient(circle at 50% 30%, rgba(192, 104, 52, 0.09), transparent 50%),
-    rgba(25, 12, 11, 0.92);
+  grid-template-columns: minmax(300px, 1.25fr) minmax(320px, 1.75fr);
+  gap: clamp(14px, 2vw, 24px);
+  min-height: 580px;
 }
 
-.astronaut-blueprint::before {
+.suit-interactive-stage {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--rust);
+  background:
+    radial-gradient(circle at 50% 35%, rgba(192, 104, 52, 0.16), transparent 55%),
+    rgba(22, 10, 9, 0.94);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  min-height: 520px;
+}
+
+.suit-interactive-stage::before {
   position: absolute;
   inset: 7px;
   border: 1px solid rgba(192, 104, 52, 0.22);
@@ -144,172 +137,221 @@
   pointer-events: none;
 }
 
-.astronaut-blueprint > svg {
-  width: 100%;
-  min-height: 0;
-  height: 100%;
-}
-
-.astronaut-blueprint .blueprint-grid path {
-  fill: none;
-  opacity: 0.16;
-  stroke: #74412d;
-  stroke-width: 0.7;
-}
-
-/* Suit Silhouette & Anatomy Layers */
-.emu-suit-base {
-  fill: rgba(45, 23, 19, 0.65);
-  stroke: #dc8753;
-  stroke-width: 1.8;
-  stroke-linejoin: round;
-}
-
-.emu-suit-accent {
-  fill: none;
-  stroke: #ed9255;
-  stroke-width: 1.5;
-}
-
-.emu-visor-gold {
-  fill: url(#visorGold);
-  stroke: #ffd494;
-  stroke-width: 1.8;
-  filter: drop-shadow(0 0 8px rgba(237, 146, 85, 0.6));
-}
-
-.emu-visor-shine {
-  fill: none;
-  stroke: rgba(255, 255, 255, 0.7);
-  stroke-width: 2;
-  stroke-linecap: round;
-}
-
-.emu-joint-ring {
-  fill: #3e1f18;
-  stroke: #f0a36e;
-  stroke-width: 1.2;
-}
-
-.emu-tread {
-  fill: #22100d;
-  stroke: #dc8753;
-  stroke-width: 1.5;
-}
-
-.emu-panel-stitch {
-  fill: none;
-  stroke: rgba(220, 135, 83, 0.4);
-  stroke-width: 0.9;
-  stroke-dasharray: 3 3;
-}
-
-/* Biometrics Layer */
-.vital-lead-wire {
-  fill: none;
-  stroke: #5bd4e6;
-  stroke-width: 1.6;
-  stroke-dasharray: 4 2;
-  animation: circuitFlow 1.6s infinite linear;
-}
-
-@keyframes circuitFlow {
-  from {
-    stroke-dashoffset: 24;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-.vital-sensor-node {
-  fill: #ffb86c;
-  stroke: #fff;
-  stroke-width: 1.5;
-  filter: drop-shadow(0 0 7px #ff9e42);
-}
-
-.vital-readout-card {
-  fill: rgba(16, 9, 8, 0.88);
-  stroke: #c06834;
-  stroke-width: 1;
-}
-
-/* ECLSS Layer */
-.eclss-tank-glow {
-  fill: url(#tankGlow);
-  opacity: 0.9;
-  filter: drop-shadow(0 0 7px rgba(225, 126, 62, 0.5));
-}
-
-.coolant-tube-network {
-  fill: none;
-  stroke: #5de4eb;
-  stroke-width: 1.4;
-  stroke-linecap: round;
-  opacity: 0.85;
-}
-
-.eclss-valves {
-  fill: #c06834;
-  stroke: #ffd4a8;
-  stroke-width: 1;
-}
-
-/* Payload Layer */
-.payload-gear-body {
-  fill: #3b1c15;
-  stroke: #ed9255;
-  stroke-width: 1.6;
-}
-
-.payload-dcm-panel {
-  fill: #190c0a;
-  stroke: #e69860;
-  stroke-width: 1.4;
-}
-
-.payload-dcm-led {
-  fill: var(--safe-green);
-  filter: drop-shadow(0 0 5px var(--safe-green));
-}
-
-.payload-tether-cable {
-  fill: none;
-  stroke: #ffd0a0;
-  stroke-width: 2.2;
-}
-
-.blueprint-callout-line {
-  stroke: rgba(237, 146, 85, 0.7);
-  stroke-width: 1;
-  stroke-dasharray: 3 3;
-}
-
-.blueprint-callout-tag {
-  fill: #130908;
-  stroke: var(--rust);
-  stroke-width: 0.9;
-}
-
-.blueprint-callout-text {
-  fill: #e8d0c2;
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 8px;
+.suit-readiness-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border: 1px solid var(--rust-bright);
+  background: rgba(16, 9, 8, 0.9);
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  color: #ffd0a0;
+  letter-spacing: 0.08em;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.suit-readiness-bar {
+  width: 70px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid rgba(192, 104, 52, 0.3);
+}
+
+.suit-readiness-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ed9255, #48e58a);
+  transition: width 350ms ease;
+}
+
+.suit-hint-tag {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
+  z-index: 10;
+  padding: 6px 12px;
+  background: rgba(18, 8, 7, 0.88);
+  border: 1px dashed rgba(237, 146, 85, 0.4);
+  font-size: 10px;
+  color: #ffd0a0;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+.gear-select-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0 16px;
+}
+
+.gear-card-btn {
+  display: grid;
+  grid-template-columns: 46px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1.5px solid rgba(192, 104, 52, 0.4);
+  background: rgba(26, 12, 10, 0.85);
+  cursor: pointer;
+  text-align: left;
+  transition: all 180ms ease;
+  position: relative;
+  border-radius: 6px;
+}
+
+.gear-card-btn:hover {
+  border-color: var(--rust-bright);
+  background: rgba(45, 20, 16, 0.95);
+  transform: translateX(4px);
+}
+
+.gear-card-btn.is-equipped {
+  border-color: var(--safe-green);
+  background: rgba(18, 38, 24, 0.88);
+  box-shadow: 0 0 14px rgba(72, 229, 138, 0.2);
+}
+
+.gear-card-icon {
+  font-size: 24px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: rgba(16, 8, 6, 0.8);
+  border: 1px solid rgba(192, 104, 52, 0.3);
+  transition: all 180ms ease;
+  flex-shrink: 0;
+}
+
+.gear-card-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--rust-bright);
+  transition: all 180ms ease;
+}
+
+.gear-card-btn.is-equipped .gear-card-icon,
+.storm-action-btn.is-active .gear-card-icon {
+  border-color: var(--safe-green);
+  background: rgba(72, 229, 138, 0.15);
+}
+
+.gear-card-btn.is-equipped .gear-card-icon svg {
+  stroke: var(--safe-green);
+}
+
+.gear-card-info h3 {
+  margin: 0 0 3px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+
+.gear-card-info p {
+  margin: 0;
+  font-size: 10px;
+  color: #d19a79;
+  line-height: 1.35;
+}
+
+.gear-card-badge {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  background: #3b1b14;
+  color: #ffd0a0;
+  border: 1px solid #7a3e29;
+  white-space: nowrap;
+}
+
+.gear-card-btn.is-equipped .gear-card-badge {
+  background: rgba(72, 229, 138, 0.25);
+  color: #48e58a;
+  border-color: #48e58a;
 }
 
 /* ============================================================
-   SPACE WEATHER & DONKI SIMULATION STAGE
+   ASTRONAUT INTERACTIVE BLUEPRINT SVG STYLES
    ============================================================ */
 
-.space-weather-simulator {
+.astronaut-blueprint-svg {
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.6));
+}
+
+.blueprint-grid-path {
+  stroke: rgba(192, 104, 52, 0.15);
+  stroke-width: 0.8;
+  stroke-dasharray: 2 4;
+}
+
+.emu-suit-undergarment {
+  fill: #221210;
+  stroke: #663322;
+  stroke-width: 1.5;
+}
+
+.emu-equipped-layer {
+  transition: all 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center center;
+}
+
+.emu-equipped-armor {
+  fill: #3a1c15;
+  stroke: #ed9255;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 8px rgba(237, 146, 85, 0.3));
+}
+
+.emu-visor-gold-foil {
+  fill: url(#visorGold);
+  stroke: #ffe4a0;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.45));
+}
+
+.emu-joint-rings {
+  fill: #190b08;
+  stroke: #ffad66;
+  stroke-width: 1.5;
+}
+
+.eclss-backpack-glow {
+  fill: #341812;
+  stroke: #7ee7f5;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 12px rgba(126, 231, 245, 0.3));
+}
+
+.safer-thruster-pod {
+  fill: #2f1510;
+  stroke: #ffad66;
+  stroke-width: 1.8;
+}
+
+/* ============================================================
+   QUEST 2: NASA DONKI STORM DEFENSE (ARCADE SIM)
+   ============================================================ */
+
+.storm-game-grid {
   display: grid;
-  height: calc(100svh - 88px);
-  min-height: 610px;
-  grid-template-columns: minmax(280px, 0.92fr) minmax(430px, 1.08fr);
-  gap: clamp(14px, 1.7vw, 24px);
+  grid-template-columns: minmax(300px, 1.25fr) minmax(320px, 1.75fr);
+  gap: clamp(14px, 2vw, 24px);
+  min-height: 580px;
 }
 
 .space-weather-stage {
@@ -317,9 +359,13 @@
   overflow: hidden;
   border: 1px solid var(--rust);
   background:
-    radial-gradient(circle at 8% 50%, rgba(255, 140, 60, 0.28), transparent 32%),
-    radial-gradient(ellipse at 85% 50%, rgba(35, 18, 15, 0.8), transparent 45%),
-    linear-gradient(90deg, #1f0b07 0%, #0d0605 50%, #080303 100%);
+    radial-gradient(circle at 10% 50%, rgba(255, 90, 30, 0.25), transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(126, 231, 245, 0.08), transparent 45%),
+    #0d0504;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 520px;
 }
 
 .space-weather-stage::before {
@@ -328,287 +374,491 @@
   border: 1px solid rgba(192, 104, 52, 0.22);
   content: '';
   pointer-events: none;
-  z-index: 6;
 }
 
+/* Pulsating Solar Corona */
 .sun-corona {
   position: absolute;
+  left: -80px;
   top: 50%;
-  left: -90px;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #fff 10%, #ffae42 45%, #e65c00 70%, transparent 85%);
-  box-shadow:
-    0 0 60px rgba(255, 150, 50, 0.8),
-    0 0 120px rgba(255, 100, 20, 0.4);
   transform: translateY(-50%);
-  animation: sunPulsate 4s infinite ease-in-out;
+  width: 160px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 15%, #ffd700 45%, #ff4500 80%, transparent 100%);
+  box-shadow: 0 0 60px #ff5500, 0 0 100px rgba(255, 69, 0, 0.5);
+  animation: sunPulse 2.4s infinite alternate ease-in-out;
+  pointer-events: none;
 }
 
-@keyframes sunPulsate {
-  0%, 100% {
-    transform: translateY(-50%) scale(1);
-    box-shadow: 0 0 60px rgba(255, 150, 50, 0.8), 0 0 120px rgba(255, 100, 20, 0.4);
+@keyframes sunPulse {
+  0% {
+    transform: translateY(-50%) scale(0.96);
+    box-shadow: 0 0 45px #ff5500, 0 0 80px rgba(255, 69, 0, 0.4);
   }
-  50% {
-    transform: translateY(-50%) scale(1.06);
-    box-shadow: 0 0 80px rgba(255, 170, 70, 0.95), 0 0 150px rgba(255, 120, 30, 0.6);
+  100% {
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 0 75px #ff6600, 0 0 120px rgba(255, 69, 0, 0.65);
   }
 }
 
+/* CME Particle Stream Lines */
 .cme-particle-field {
   position: absolute;
   inset: 0;
   pointer-events: none;
   overflow: hidden;
-  z-index: 3;
 }
 
 .cme-stream-line {
   position: absolute;
+  left: 30px;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #ff9f43, #fff, transparent);
-  opacity: 0.75;
-  animation: cmePass 1.4s infinite linear;
+  width: 120px;
+  background: linear-gradient(90deg, #ff4500, #ffb366, #fff);
+  box-shadow: 0 0 8px #ff7733;
+  border-radius: 2px;
+  animation: cmeStream 1.2s infinite linear;
 }
 
-@keyframes cmePass {
+@keyframes cmeStream {
   0% {
-    left: 5%;
-    width: 20px;
+    left: 20px;
     opacity: 0;
+    width: 40px;
   }
-  25% {
+  30% {
     opacity: 0.9;
-  }
-  80% {
-    opacity: 0.6;
+    width: 140px;
   }
   100% {
-    left: 85%;
-    width: 140px;
+    left: 100%;
+    opacity: 0;
+    width: 80px;
+  }
+}
+
+/* Dynamic CME Shockwave Surge */
+.cme-wave-surge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  background: linear-gradient(90deg, transparent, rgba(255, 140, 50, 0.8), #fff, rgba(255, 140, 50, 0.8), transparent);
+  filter: drop-shadow(0 0 25px #ff7820);
+  pointer-events: none;
+  z-index: 6;
+  animation: cmeSweep 1.8s forwards ease-in-out;
+}
+
+@keyframes cmeSweep {
+  0% {
+    left: -60px;
+    opacity: 0.2;
+  }
+  20% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    left: 110%;
     opacity: 0;
   }
 }
 
+/* EVA Spacewalker Outside Capsule */
+.eva-astronaut-floating {
+  position: absolute;
+  right: 180px;
+  top: 36%;
+  z-index: 8;
+  animation: evaDrift 3.5s infinite alternate ease-in-out;
+}
+
+@keyframes evaDrift {
+  0% {
+    transform: translateY(0) rotate(-4deg);
+  }
+  100% {
+    transform: translateY(-16px) rotate(6deg);
+  }
+}
+
+/* Crew Capsule Pod */
 .sim-pod-container {
   position: absolute;
+  right: 40px;
   top: 50%;
-  left: 68%;
-  transform: translate(-50%, -50%);
-  width: 140px;
-  height: 180px;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 5;
 }
 
+/* Active 45 kV EM Forcefield Dome */
 .magnetic-deflection-dome {
   position: absolute;
   width: 170px;
-  height: 210px;
+  height: 170px;
   border-radius: 50%;
-  border: 2px solid #62e5ff;
-  background: radial-gradient(circle, rgba(98, 229, 255, 0.12) 0%, rgba(237, 146, 85, 0.15) 70%, transparent 100%);
-  box-shadow:
-    0 0 25px rgba(98, 229, 255, 0.65),
-    inset 0 0 20px rgba(237, 146, 85, 0.4);
-  animation: domeShimmer 2.2s infinite ease-in-out;
+  border: 2px solid var(--cyan-glow);
+  background: radial-gradient(circle, rgba(126, 231, 245, 0.2) 20%, rgba(126, 231, 245, 0.05) 70%, transparent 100%);
+  box-shadow: 0 0 30px rgba(126, 231, 245, 0.6), inset 0 0 20px rgba(126, 231, 245, 0.4);
+  animation: shieldHum 1.6s infinite alternate ease-in-out;
   pointer-events: none;
 }
 
-@keyframes domeShimmer {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.85;
-    box-shadow: 0 0 25px rgba(98, 229, 255, 0.65), inset 0 0 20px rgba(237, 146, 85, 0.4);
+@keyframes shieldHum {
+  0% {
+    transform: scale(0.97);
+    opacity: 0.8;
   }
-  50% {
+  100% {
     transform: scale(1.04);
     opacity: 1;
-    box-shadow: 0 0 40px rgba(98, 229, 255, 0.95), inset 0 0 30px rgba(237, 146, 85, 0.65);
+    box-shadow: 0 0 45px rgba(126, 231, 245, 0.8), inset 0 0 30px rgba(126, 231, 245, 0.5);
   }
 }
 
+/* Waterwall Storm Bunker */
+.waterwall-barrier {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 2px dashed #3a82f6;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, rgba(30, 64, 175, 0.15) 100%);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  pointer-events: none;
+  animation: waterBubble 2.5s infinite alternate ease-in-out;
+}
+
+@keyframes waterBubble {
+  0% {
+    transform: scale(0.98);
+  }
+  100% {
+    transform: scale(1.02);
+  }
+}
+
+/* Unshielded Hazard Pulse */
 .radiation-hazard-pulse {
   position: absolute;
-  inset: -15px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
-  border: 2px dashed rgba(255, 77, 77, 0.8);
-  background: radial-gradient(circle, rgba(255, 77, 77, 0.25) 0%, transparent 70%);
+  background: rgba(255, 77, 77, 0.25);
+  border: 2px solid #ff4d4d;
+  box-shadow: 0 0 25px rgba(255, 77, 77, 0.5);
   animation: hazardAlarm 1s infinite alternate ease-in-out;
   pointer-events: none;
 }
 
 @keyframes hazardAlarm {
   0% {
+    transform: scale(0.9);
     opacity: 0.3;
-    transform: scale(0.95);
   }
   100% {
+    transform: scale(1.15);
     opacity: 0.85;
-    transform: scale(1.08);
   }
 }
 
-.stage-status-overlay {
-  position: absolute;
-  top: 14px;
-  left: 14px;
+/* Storm Action Cards */
+.storm-action-cards {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  z-index: 7;
+  gap: 10px;
+  margin: 12px 0 16px;
 }
 
-.stage-status-chip {
-  display: inline-flex;
+.storm-action-btn {
+  display: grid;
+  grid-template-columns: 46px 1fr auto;
   align-items: center;
-  gap: 6px;
-  padding: 3px 8px;
-  border: 1px solid rgba(192, 104, 52, 0.5);
-  background: rgba(16, 9, 8, 0.85);
-  color: #f4e7db;
-  font-size: 9px;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1.5px solid rgba(255, 77, 77, 0.4);
+  background: rgba(30, 10, 8, 0.85);
+  cursor: pointer;
+  text-align: left;
+  transition: all 180ms ease;
+  border-radius: 6px;
+}
+
+.storm-action-btn:hover {
+  border-color: #ff8080;
+  background: rgba(50, 15, 12, 0.95);
+  transform: translateX(4px);
+}
+
+.storm-action-btn.is-active {
+  border-color: var(--safe-green);
+  background: rgba(16, 40, 24, 0.88);
+  box-shadow: 0 0 14px rgba(72, 229, 138, 0.2);
+}
+
+/* NASA DONKI Alert Banner */
+.donki-alert-banner {
+  padding: 10px 14px;
+  border: 1px solid #c06834;
+  background: linear-gradient(135deg, rgba(38, 16, 12, 0.95) 0%, rgba(18, 7, 5, 0.95) 100%);
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.donki-alert-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  color: #ffad66;
+  margin-bottom: 4px;
 }
 
-.stage-status-chip.shield-active {
-  border-color: #5bd4e6;
-  color: #bdf6ff;
-  box-shadow: 0 0 10px rgba(91, 212, 230, 0.25);
+.donki-alert-meta {
+  display: flex;
+  gap: 14px;
+  font-size: 9px;
+  color: #c49d88;
+  letter-spacing: 0.05em;
+  flex-wrap: wrap;
 }
 
-.stage-status-chip.shield-inactive {
-  border-color: var(--hazard-red);
-  color: #ff9999;
-  box-shadow: 0 0 10px rgba(255, 77, 77, 0.3);
+.hera-dosimeter-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border: 1px solid rgba(192, 104, 52, 0.4);
+  background: rgba(16, 8, 6, 0.9);
+  border-radius: 6px;
+  margin-bottom: 14px;
+}
+
+.hera-dose-num {
+  font-family: 'Orbitron', monospace;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.srag-allclear-badge {
+  padding: 12px 14px;
+  border: 1.5px solid var(--safe-green);
+  background: rgba(18, 48, 26, 0.92);
+  border-radius: 6px;
+  margin-top: 12px;
+  font-size: 11px;
+  color: #d1fae5;
+  line-height: 1.45;
+  box-shadow: 0 0 18px rgba(72, 229, 138, 0.25);
+}
+
+.donki-info-box {
+  padding: 12px;
+  border: 1px solid #783e26;
+  background: rgba(22, 10, 8, 0.95);
+  font-size: 10px;
+  color: #ffd0a0;
+  line-height: 1.5;
+  border-radius: 6px;
+}
+
+.donki-toggle-link {
+  background: none;
+  border: none;
+  color: #ffad66;
+  cursor: pointer;
+  padding: 0;
+  font-size: 10px;
+  font-weight: 700;
+  text-decoration: underline;
+  transition: color 140ms ease;
+}
+
+.donki-toggle-link:hover {
+  color: #fff;
 }
 
 /* ============================================================
-   CENTER OF GRAVITY & MASS BALANCER STAGE
+   QUEST 3: ROCKET LAUNCH BALANCER (PHYSICS SIM)
    ============================================================ */
 
-.protocol-simulator {
+.balancer-game-grid {
   display: grid;
-  height: calc(100svh - 88px);
-  min-height: 610px;
-  grid-template-columns: minmax(280px, 0.92fr) minmax(430px, 1.08fr);
-  gap: clamp(14px, 1.7vw, 24px);
+  grid-template-columns: minmax(300px, 1.2fr) minmax(320px, 1.8fr);
+  gap: clamp(14px, 2vw, 24px);
+  min-height: 580px;
 }
 
-.cg-balance-stage {
+.rocket-launch-platform {
   position: relative;
   overflow: hidden;
   border: 1px solid var(--rust);
   background:
-    radial-gradient(circle at 50% 25%, rgba(192, 104, 52, 0.12), transparent 45%),
-    #130a09;
+    radial-gradient(circle at 50% 85%, rgba(192, 104, 52, 0.2), transparent 55%),
+    linear-gradient(180deg, #090303 0%, #170907 65%, #24110e 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 24px;
+  min-height: 520px;
 }
 
-.cg-balance-stage::before {
+.rocket-launch-platform::before {
   position: absolute;
   inset: 7px;
   border: 1px solid rgba(192, 104, 52, 0.22);
   content: '';
   pointer-events: none;
-  z-index: 6;
+}
+
+.rocket-assembly-body {
+  position: relative;
+  width: 140px;
+  height: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: bottom center;
+  z-index: 5;
+}
+
+.rocket-assembly-body.is-blasting-off {
+  animation: blastOff 2.8s forwards ease-in;
+}
+
+@keyframes blastOff {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  25% {
+    transform: translateY(-30px) scale(0.98);
+  }
+  60% {
+    transform: translateY(-280px) scale(0.85);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateY(-800px) scale(0.4);
+    opacity: 0;
+  }
+}
+
+.rocket-flames-burn {
+  position: absolute;
+  bottom: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 60px;
+  background: radial-gradient(ellipse at top, #fff 15%, #ffd700 45%, #ff4500 80%, transparent 100%);
+  border-radius: 0 0 50% 50%;
+  filter: drop-shadow(0 0 20px #ff6600);
+  animation: flameFlicker 120ms infinite alternate;
+}
+
+@keyframes flameFlicker {
+  0% {
+    height: 55px;
+    opacity: 0.85;
+    transform: translateX(-50%) scaleX(0.95);
+  }
+  100% {
+    height: 75px;
+    opacity: 1;
+    transform: translateX(-50%) scaleX(1.08);
+  }
 }
 
 .rocket-cross-section {
-  position: absolute;
-  top: 40px;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 170px;
+  position: relative;
+  width: 120px;
+  height: 320px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 4;
+  filter: drop-shadow(0 0 14px rgba(0, 0, 0, 0.8));
 }
 
 .capsule-nose {
-  width: 80px;
-  height: 70px;
-  border: 2px solid var(--rust);
-  border-radius: 50% 50% 10% 10% / 80% 80% 10% 10%;
-  background: linear-gradient(180deg, #381912, #210d0a);
+  width: 70px;
+  height: 60px;
+  background: #2f1510;
+  border: 2px solid var(--rust-bright);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: inset 0 0 10px rgba(237, 146, 85, 0.2);
 }
 
 .capsule-window {
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  border: 1.5px solid #ffbe85;
-  background: radial-gradient(circle, #5bbce6, #143547);
-  box-shadow: 0 0 8px rgba(91, 188, 230, 0.4);
+  background: #7ee7f5;
+  box-shadow: 0 0 8px #7ee7f5;
+  margin-top: 18px;
 }
 
 .cargo-bay-section {
   position: relative;
   width: 110px;
-  height: 120px;
-  margin-top: 4px;
+  height: 110px;
   border: 2px solid var(--rust);
-  background: #1a0c0a;
+  border-top: none;
+  background: #180907;
   overflow: hidden;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 6px;
+  align-items: flex-end;
 }
 
 .cargo-fill-level {
   width: 100%;
-  background: linear-gradient(180deg, #ed9255, #8a3f1c);
-  transition: height 240ms ease;
-  border-top: 2px solid #ffbe85;
-  box-shadow: 0 0 12px rgba(237, 146, 85, 0.4);
+  background: linear-gradient(180deg, #ffad66 0%, #a84b1f 100%);
+  transition: height 200ms ease;
+  box-shadow: inset 0 2px 8px rgba(255, 255, 255, 0.3);
 }
 
 .fuel-tank-section {
   position: relative;
-  width: 130px;
-  height: 170px;
-  margin-top: 4px;
+  width: 110px;
+  height: 150px;
   border: 2px solid var(--rust);
-  border-radius: 0 0 14px 14px;
-  background: #160a08;
+  border-top: none;
+  background: #120605;
   overflow: hidden;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 6px;
+  align-items: flex-end;
 }
 
 .fuel-fill-level {
   width: 100%;
-  background: linear-gradient(180deg, #51cfde, #1a5661);
-  transition: height 240ms ease;
-  border-top: 2px solid #8ef2ff;
-  box-shadow: 0 0 12px rgba(81, 207, 222, 0.4);
+  background: linear-gradient(180deg, #5eead4 0%, #0d9488 100%);
+  transition: height 200ms ease;
+  box-shadow: inset 0 2px 8px rgba(255, 255, 255, 0.3);
 }
 
-/* CG Indicator Marker */
 .cg-indicator-line {
   position: absolute;
-  left: 20px;
-  right: 20px;
-  height: 2px;
+  left: 10px;
+  right: 10px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  z-index: 8;
-  transition: top 240ms ease;
+  align-items: center;
+  z-index: 10;
+  pointer-events: none;
+  transition: top 250ms ease;
 }
 
 .cg-indicator-line::after {
@@ -616,220 +866,254 @@
   position: absolute;
   left: 0;
   right: 0;
-  height: 1px;
-  background: dashed 2px;
-  border-top: 1px dashed #ffc68a;
-  opacity: 0.8;
+  top: 50%;
+  height: 2px;
+  background: #ff5533;
+  box-shadow: 0 0 8px #ff5533;
+  z-index: -1;
 }
 
 .cg-indicator-badge {
-  position: relative;
-  z-index: 2;
-  padding: 2px 8px;
-  border: 1px solid var(--rust-bright);
-  background: #190c0a;
-  color: #ffc68a;
-  font-size: 9px;
+  padding: 2px 6px;
+  font-size: 8px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
+  background: #140706;
+  border: 1px solid #ff5533;
+  color: #ff9988;
 }
 
 .cg-safe-zone-bracket {
   position: absolute;
-  right: 18px;
-  top: 32%;
-  height: 28%;
-  width: 18px;
-  border-top: 2px solid var(--safe-green);
-  border-bottom: 2px solid var(--safe-green);
-  border-right: 2px solid var(--safe-green);
+  left: 20px;
+  right: 20px;
+  top: 38%;
+  height: 32%;
+  border: 1.5px dashed rgba(72, 229, 138, 0.4);
+  pointer-events: none;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 4px;
 }
 
 .cg-safe-zone-bracket span {
-  writing-mode: vertical-rl;
-  color: var(--safe-green);
   font-size: 8px;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  transform: rotate(180deg);
+  color: #48e58a;
+  letter-spacing: 0.1em;
+  background: rgba(13, 38, 19, 0.8);
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+/* Rocket Sliders & Steppers */
+.stepper-slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 14px 0 18px;
+}
+
+.stepper-slider-row {
+  display: grid;
+  grid-template-columns: 100px 32px 1fr 32px 55px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid rgba(192, 104, 52, 0.3);
+  background: rgba(22, 10, 8, 0.7);
+  border-radius: 6px;
+}
+
+.stepper-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffd0a0;
+  letter-spacing: 0.05em;
+}
+
+.stepper-btn {
+  width: 32px;
+  height: 32px;
+  background: #361711;
+  border: 1px solid #8c4224;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 140ms ease;
+}
+
+.stepper-btn:hover {
+  background: var(--rust);
+  border-color: var(--rust-bright);
+}
+
+.stepper-val {
+  font-family: 'Orbitron', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: right;
 }
 
 /* ============================================================
-   SIMULATOR CONTROLS & TERMINAL INTERACTION
+   CADET MISSION COMMAND SIDEBAR
    ============================================================ */
 
-.sim-tradeoff-panel {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin: 14px 0;
+.cadet-rank-box {
+  padding: 12px;
+  border: 1.5px solid var(--rust);
+  background: linear-gradient(135deg, rgba(38, 17, 13, 0.9) 0%, rgba(18, 7, 5, 0.95) 100%);
+  border-radius: 6px;
+  margin-bottom: 14px;
 }
 
-.tradeoff-card {
-  padding: 10px;
-  border: 1px solid rgba(192, 104, 52, 0.4);
-  background: rgba(22, 11, 9, 0.8);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.tradeoff-card.active-safe {
-  border-color: var(--safe-green);
-  box-shadow: inset 0 0 10px rgba(72, 229, 138, 0.15);
-}
-
-.tradeoff-card.active-alert {
-  border-color: var(--hazard-red);
-  box-shadow: inset 0 0 10px rgba(255, 77, 77, 0.2);
-}
-
-.tradeoff-card-title {
+.cadet-rank-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.1em;
-  color: #d19a79;
-}
-
-.tradeoff-card-body {
-  font-size: 13px;
-  font-weight: 700;
-  color: #f4e7db;
-}
-
-.tradeoff-card-sub {
-  font-size: 9px;
-  color: #8c5b46;
-}
-
-.power-meter-bar {
-  position: relative;
-  width: 100%;
-  height: 12px;
-  border: 1px solid #6b351e;
-  background: #150b09;
-  overflow: hidden;
-  margin: 6px 0 12px;
-}
-
-.power-meter-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #ed9255, #ffba7a);
-  transition: width 240ms ease;
-  box-shadow: 0 0 8px rgba(237, 146, 85, 0.6);
-}
-
-.stepper-slider-group {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin: 16px 0;
-}
-
-.stepper-slider-row {
-  display: grid;
-  grid-template-columns: 110px 32px 1fr 32px 48px;
-  align-items: center;
-  gap: 8px;
-}
-
-.stepper-label {
-  font-size: 10px;
-  font-weight: 700;
+  color: #c49d88;
   letter-spacing: 0.08em;
-  color: #cf9b7b;
-  text-transform: uppercase;
+  margin-bottom: 6px;
 }
 
-.stepper-btn {
-  height: 28px;
-  border: 1px solid #6a341e;
-  background: #21110e;
-  color: #f4e7db;
-  font-weight: 700;
-  font-size: 14px;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  transition: all 140ms ease;
-}
-
-.stepper-btn:hover {
-  border-color: var(--rust-bright);
-  background: #3b1b14;
-  color: #fff;
-}
-
-.stepper-val {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  color: #fff;
-  text-align: right;
-}
-
-.stepper-slider-row input[type='range'] {
+.cadet-xp-track {
   width: 100%;
-  accent-color: var(--rust-bright);
-  cursor: pointer;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid rgba(192, 104, 52, 0.35);
+  margin-bottom: 6px;
 }
 
-.donki-info-box {
-  margin-top: 14px;
+.cadet-xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff9944, #ffd700);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  transition: width 400ms ease;
+}
+
+.cadet-trivia-box {
   padding: 12px;
-  border: 1px solid #4d2719;
-  background: rgba(18, 9, 8, 0.85);
-  font-size: 11px;
-  line-height: 1.45;
-  color: #ddc7bb;
-}
-
-.donki-info-box b {
-  color: var(--rust-bright);
-}
-
-.donki-toggle-link {
-  display: inline-block;
-  margin-top: 8px;
-  color: #7ee7f5;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  text-decoration: underline;
-  padding: 0;
-}
-
-.donki-toggle-link:hover {
-  color: #fff;
-}
-
-.protocol-advance-wrapper {
+  border: 1px solid #783e26;
+  background: rgba(26, 12, 10, 0.85);
+  border-radius: 6px;
   margin-top: 14px;
+}
+
+.cadet-trivia-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--star-gold);
+  margin-bottom: 6px;
+}
+
+.cadet-trivia-text {
+  font-size: 11px;
+  color: #f0ddd0;
+  line-height: 1.45;
+  margin: 0;
 }
 
 /* ============================================================
-   RESPONSIVE DESIGN ADAPTATIONS
+   CELEBRATION OVERLAY & CONFETTI
+   ============================================================ */
+
+.quest-victory-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(12, 5, 4, 0.88);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+  text-align: center;
+  padding: 24px;
+  backdrop-filter: blur(5px);
+  animation: fadeIn 250ms ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.quest-victory-card {
+  max-width: 480px;
+  width: 100%;
+  padding: 28px;
+  border: 2px solid var(--star-gold);
+  background: linear-gradient(180deg, #2a110d 0%, #170705 100%);
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.4), inset 0 0 20px rgba(255, 215, 0, 0.15);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.victory-stars-row {
+  display: flex;
+  gap: 10px;
+  font-size: 34px;
+  color: var(--star-gold);
+  filter: drop-shadow(0 0 12px #ffd700);
+  align-items: center;
+  justify-content: center;
+}
+
+.victory-stars-row svg {
+  width: 36px;
+  height: 36px;
+  fill: var(--star-gold);
+  color: var(--star-gold);
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.7));
+}
+
+.victory-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.victory-desc {
+  font-size: 13px;
+  color: #ffd0a0;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ============================================================
+   RESPONSIVE ADAPTATIONS
    ============================================================ */
 
 @media (max-width: 900px) {
-  .space-weather-simulator,
-  .protocol-simulator {
+  .suit-builder-grid,
+  .storm-game-grid,
+  .balancer-game-grid {
     grid-template-columns: 1fr;
     height: auto;
     min-height: 0;
   }
-
-  .space-weather-stage,
-  .cg-balance-stage {
-    min-height: 280px;
+  .stepper-slider-row {
+    grid-template-columns: 80px 28px 1fr 28px 45px;
   }
 }
