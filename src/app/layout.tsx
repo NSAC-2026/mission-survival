@@ -5,6 +5,7 @@ import "@/styles/proton-dashboard.css";
 import "@/styles/astronaut-profile.css";
 import "@/styles/terminal.css";
 import "@/styles/docking-simulator.css";
+import "@/styles/mission-survival.css";
 
 const orbitron = Orbitron({
   variable: "--font-orbitron",
@@ -19,9 +20,9 @@ const rajdhani = Rajdhani({
 });
 
 export const metadata: Metadata = {
-  title: "Mission Space - Beyond Earth",
+  title: "Mission Survival – Beyond Earth",
   description:
-    "A sci-fi space game menu for players to access tutorials, quick play, sandbox missions, and career mode from one sleek interface.",
+    "An open-world sci-fi survival and planetary exploration interface.",
   icons: {
     icon: "/favicon.svg",
   },

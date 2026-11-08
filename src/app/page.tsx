@@ -1,5 +1,5 @@
-import SpaceGameMenu from "@/components/SpaceGameMenu";
+import MissionSurvivalLanding from "@/components/MissionSurvivalLanding";
 
 export default function Home() {
-  return <SpaceGameMenu />;
+  return <MissionSurvivalLanding />;
 }
