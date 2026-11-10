@@ -1,6 +1,7 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { getScoreState, subscribeScoreChange, type ScoreState } from '@/lib/score-system'
 
 interface PlayerProfileProps {
   name?: string
@@ -47,19 +48,38 @@ export function HexagonEmblem({ className = 'w-10 h-10' }: { className?: string 
 
 export default function PlayerProfileHUD({
   name = 'PLAYER ONE',
-  rank = 'Explorer',
-  level = 12,
-  currentXp = 3250,
-  maxXp = 5000,
+  rank: propRank,
+  level: propLevel,
+  currentXp: propCurrentXp,
+  maxXp: propMaxXp,
   onOpenProfile,
 }: PlayerProfileProps) {
-  const percentage = Math.min(100, Math.max(0, (currentXp / maxXp) * 100))
+  const [scoreState, setScoreState] = useState<ScoreState | null>(null)
+
+  useEffect(() => {
+    // Initial fetch from scoring system
+    setScoreState(getScoreState())
+
+    // Subscribe to live score updates
+    const unsubscribe = subscribeScoreChange((nextState) => {
+      setScoreState(nextState)
+    })
+    return () => unsubscribe()
+  }, [])
+
+  const displayRank = scoreState ? scoreState.rank : (propRank || 'Explorer')
+  const displayLevel = scoreState ? scoreState.level : (propLevel || 12)
+  const displayCurrentXp = scoreState ? scoreState.totalXp : (propCurrentXp || 3250)
+  const displayMaxXp = scoreState ? Math.max(scoreState.totalXp + (scoreState.maxLevelXp - scoreState.currentLevelXp), 5000) : (propMaxXp || 5000)
+  const levelProgressPct = scoreState
+    ? Math.min(100, Math.max(0, (scoreState.currentLevelXp / scoreState.maxLevelXp) * 100))
+    : Math.min(100, Math.max(0, (displayCurrentXp / displayMaxXp) * 100))
 
   return (
     <div
       onClick={onOpenProfile}
       className="hud-panel rounded-sm px-3.5 py-3 w-[240px] md:w-[250px] cursor-pointer hover:border-amber-400/40 transition-all duration-300 group select-none"
-      title="Click to view Explorer Profile"
+      title="Click to view Explorer Profile & Scoreboard"
     >
       <div className="flex items-center gap-3">
         {/* Avatar emblem */}
@@ -72,11 +92,11 @@ export default function PlayerProfileHUD({
           <span className="text-[12px] font-bold tracking-[0.12em] text-white uppercase truncate font-['Orbitron',sans-serif]">
             {name}
           </span>
-          <span className="text-[11px] text-white/60 font-medium tracking-wide">
-            {rank}
+          <span className="text-[11px] text-amber-300/80 font-medium tracking-wide truncate">
+            {displayRank}
           </span>
           <span className="text-[11px] text-white/90 font-semibold tracking-wide">
-            Level {level}
+            Level {displayLevel}
           </span>
         </div>
       </div>
@@ -86,12 +106,15 @@ export default function PlayerProfileHUD({
         <div className="h-1.5 w-full bg-black/60 rounded-full overflow-hidden border border-white/10">
           <div
             className="h-full gold-gradient-bar transition-all duration-500 rounded-full"
-            style={{ width: `${percentage}%` }}
+            style={{ width: `${levelProgressPct}%` }}
           />
         </div>
-        <div className="flex justify-end mt-1">
-          <span className="text-[9.5px] font-mono tracking-wider text-white/65">
-            {currentXp.toLocaleString()} / {maxXp.toLocaleString()} XP
+        <div className="flex justify-between items-center mt-1">
+          <span className="text-[8.5px] font-mono tracking-wider text-amber-400/70">
+            TOTAL SCORE
+          </span>
+          <span className="text-[9.5px] font-mono tracking-wider text-white/80">
+            {displayCurrentXp.toLocaleString()} XP
           </span>
         </div>
       </div>

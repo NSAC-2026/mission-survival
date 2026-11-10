@@ -1,8 +1,9 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Star } from 'lucide-react'
+import { Star, CheckCircle } from 'lucide-react'
 import { cockpitAudio } from '@/utils/audio'
+import { claimDailyReward } from '@/lib/score-system'
 
 export interface ChallengeItem {
   id: string
@@ -44,6 +45,12 @@ export default function DailyChallengesHUD({
   }
 
   const allCompleted = challenges.every((c) => c.current >= c.target)
+
+  const handleClaim = () => {
+    cockpitAudio.playSuccessChime()
+    setClaimed(true)
+    claimDailyReward(rewardXp)
+  }
 
   return (
     <div className="hud-panel rounded-sm px-3.5 py-3 w-[240px] md:w-[250px] select-none">
@@ -95,14 +102,16 @@ export default function DailyChallengesHUD({
         </div>
         {allCompleted && !claimed && (
           <button
-            onClick={() => {
-              cockpitAudio.playSuccessChime()
-              setClaimed(true)
-            }}
-            className="text-[9px] px-1.5 py-0.5 bg-amber-400/20 border border-amber-400/80 text-amber-300 rounded font-bold hover:bg-amber-400/30"
+            onClick={handleClaim}
+            className="px-2.5 py-1 bg-amber-400 hover:bg-amber-300 text-black text-[10px] font-bold rounded uppercase tracking-wider font-['Orbitron',sans-serif] transition-transform active:scale-95 shadow-md"
           >
             CLAIM
           </button>
+        )}
+        {claimed && (
+          <span className="text-[10px] text-emerald-400 font-mono flex items-center gap-1 font-bold">
+            <CheckCircle className="w-3 h-3" /> CLAIMED
+          </span>
         )}
       </div>
     </div>

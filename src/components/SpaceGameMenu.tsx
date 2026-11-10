@@ -8,6 +8,7 @@ import MissionSurvivalTerminal from './MissionSurvivalTerminal'
 import SpaceStationDocking from './SpaceStationDocking'
 import { cockpitAudio } from '@/utils/audio'
 import { isLevelUnlocked, unlockLevel } from '@/lib/campaign-state'
+import { recordLevelScore } from '@/lib/score-system'
 
 const ProtonDashboard = dynamic(() => import('./ProtonDashboard'), {
   ssr: false,
@@ -132,6 +133,7 @@ export default function SpaceGameMenu() {
         <AstronautProfile
           onBack={() => setScreen('quick-play')}
           onNext={() => {
+            recordLevelScore(1, 1000, 1000, 3)
             unlockLevel(2)
             setScreen('proton-dashboard')
           }}
@@ -140,6 +142,7 @@ export default function SpaceGameMenu() {
         <ProtonDashboard
           onBack={() => setScreen('quick-play')}
           onNext={() => {
+            recordLevelScore(2, 1500, 1500, 3)
             unlockLevel(3)
             setScreen('docking-simulator')
           }}
@@ -148,6 +151,7 @@ export default function SpaceGameMenu() {
         <SpaceStationDocking
           onBack={() => setScreen('quick-play')}
           onNext={() => {
+            recordLevelScore(3, 2000, 2000, 3)
             unlockLevel(4)
             setTerminalLevel(4)
             setScreen('survival-terminal')
@@ -159,9 +163,11 @@ export default function SpaceGameMenu() {
           onBack={() => setScreen('quick-play')}
           onNext={() => {
             if (terminalLevel === 4) {
+              recordLevelScore(4, 1500, 1500, 3)
               unlockLevel(5)
               setTerminalLevel(5)
             } else {
+              recordLevelScore(5, 2000, 2000, 3)
               setScreen('quick-play')
             }
           }}
